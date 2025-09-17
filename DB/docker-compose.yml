@@ -1,0 +1,13 @@
+services:
+  PostgreSQL:
+    image: postgres:17.2
+    container_name: requiem-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rsp
+      - POSTGRES_DB=requiem
+    ports:
+      - '6666:5432'
+    restart: always
+    volumes:
+      - ./dump/:/docker-entrypoint-initdb.d/
