@@ -14,7 +14,7 @@ CREATE TABLE user_(
 );
 
 CREATE TABLE group_(
-   id_group INTEGER,
+   id_group SERIAL PRIMARY KEY,
    "name" VARCHAR(50)  NOT NULL,
    creation_date DATE NOT NULL,
    is_everyone_admin BOOLEAN NOT NULL,
@@ -22,19 +22,19 @@ CREATE TABLE group_(
 );
 
 CREATE TABLE genre(
-   id_genre INTEGER,
+   id_genre SERIAL PRIMARY KEY,
    "name" VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id_genre)
 );
 
 CREATE TABLE instrument(
-   id_instrument INTEGER,
+   id_instrument SERIAL PRIMARY KEY,
    "name" VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id_instrument)
 );
 
 CREATE TABLE music_piece(
-   id_track INTEGER,
+   id_track SERIAL PRIMARY KEY,
    title VARCHAR(50)  NOT NULL,
    author VARCHAR(50)  NOT NULL,
    "description" VARCHAR(250) ,
@@ -46,7 +46,7 @@ CREATE TABLE music_piece(
 );
 
 CREATE TABLE media(
-   id_media INTEGER,
+   id_media SERIAL PRIMARY KEY,
    "type" mediatype NOT NULL,
    "url" VARCHAR(100) ,
    date_added DATE NOT NULL,
