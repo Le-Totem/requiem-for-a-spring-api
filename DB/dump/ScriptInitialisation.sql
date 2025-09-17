@@ -2,7 +2,7 @@ CREATE TYPE mediatype AS ENUM ('PDF', 'image', 'musescore', 'TuxGuitar');
 
 CREATE TYPE "role" AS ENUM ('Admin', 'Moderateur', 'Utilisateur');
 
-CREATE TABLE user_(
+CREATE TABLE user(
    id_user UUID,
    firstname VARCHAR(50)  NOT NULL,
    lastname VARCHAR(50)  NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE user_(
    PRIMARY KEY(id_user)
 );
 
-CREATE TABLE group_(
+CREATE TABLE group(
    id_group INTEGER,
    "name" VARCHAR(50)  NOT NULL,
    creation_date DATE NOT NULL,
