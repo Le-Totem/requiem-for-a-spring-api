@@ -4,32 +4,116 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.afpa.requiem_for_a_spring.dtos.GenreDto;
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
+import fr.afpa.requiem_for_a_spring.services.GenreService;
 import fr.afpa.requiem_for_a_spring.services.MusicPieceService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/tracks")
 public class MusicPieceController {
 
     private final MusicPieceService musicPieceService;
+    private final GenreService genreService;
 
     // constructeur
-    public MusicPieceController(MusicPieceService musicPieceService) {
+    public MusicPieceController(MusicPieceService musicPieceService, GenreService genreService) {
         this.musicPieceService = musicPieceService;
+        this.genreService = genreService;
     }
 
     /**
-     * Récupère toutes les fiches morceaux
+     * Requête pour récupérer toutes les fiches morceaux
      * 
      * @return Une liste de fiches morceaux
      */
     @GetMapping
     public ResponseEntity<List<MusicPieceDto>> getAllMusicPieces() {
-        return new ResponseEntity<>(musicPieceService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(musicPieceService.getAllMusicPieces(), HttpStatus.OK);
     }
 
+    /**
+     * Requête pour récupérer une fiche morceau en fonction de son id
+     * 
+     * @param id L'id de la fiche morceau
+     * @return Une fiche morceau
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<MusicPieceDto> getAllMusicPiecesByIdGroup(@PathVariable Integer id) {
+        return new ResponseEntity<>(musicPieceService.getOneMusicPiece(id), HttpStatus.OK);
+    }
+
+    /**
+     * Requête pour récupérer tous les genres d'une fiche morceau
+     * 
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/all-genres")
+    public ResponseEntity<List<GenreDto>> getAllGenres(@PathVariable Integer id) {
+        return new ResponseEntity<>(genreService.getAllGenresByIdMusicPiece(id), HttpStatus.OK);
+    }
+
+    /**
+     * Requête pour créer une fiche morceau
+     * 
+     * @param musicPieceDto
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<MusicPieceDto> createMusicPiece(@RequestBody MusicPieceDto musicPieceDto) {
+        return new ResponseEntity<>(musicPieceService.createMusicPiece(musicPieceDto), HttpStatus.CREATED);
+    }
+
+    /**
+     * Requête pour créer un genre
+     * 
+     * @param genreDto
+     * @return
+     */
+    @PostMapping("/add-genre")
+    public ResponseEntity<GenreDto> createGenre(@RequestBody GenreDto genreDto) {
+        return new ResponseEntity<>(genreService.createGenre(genreDto), HttpStatus.CREATED);
+    }
+
+    /**
+     * Requête pour modifier une fiche morceau
+     * 
+     * @param id            L'id de la fiche morceau à modifier
+     * @param musicPieceDto
+     * @return
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<MusicPieceDto> updateMusicPiece(@PathVariable Integer id,
+            @RequestBody MusicPieceDto musicPieceDto) {
+        try {
+            // La requête a réussi et la fiche morceau a été modifiée
+            return new ResponseEntity<>(musicPieceService.updateMusicPiece(id, musicPieceDto), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            // La requête a échoué, la fiche morceau n'a pas été trouvée + erreur 404
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Requête pour supprimer une fiche morceau
+     * 
+     * @param id       L'id de la fiche morceau à supprimer
+     * @param response Réponse HTTP renvoyée
+     */
+    @DeleteMapping("/{id}")
+    public void removeMusicPiece(@PathVariable Integer id, HttpServletResponse response) {
+        musicPieceService.removeMusicPiece(id, response);
+    }
 }
