@@ -1,12 +1,10 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
 import fr.afpa.requiem_for_a_spring.dtos.GroupDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "group")
@@ -23,6 +21,10 @@ public class Group {
 
     @Column(name = "is_everyone_admin", nullable = false)
     private Boolean isEveryoneAdmin = false;
+
+    @OneToMany(mappedBy = "group")
+    private List<MusicPiece> musicPieces;
+
 
     public Group() {
 
@@ -67,6 +69,14 @@ public class Group {
 
     public void setIsEveryoneAdmin(Boolean isEveryoneAdmin) {
         this.isEveryoneAdmin = isEveryoneAdmin;
+    }
+
+    public List<MusicPiece> getMusicPieces() {
+        return musicPieces;
+    }
+
+    public void setMusicPieces(List<MusicPiece> musicPieces) {
+        this.musicPieces = musicPieces;
     }
 
 }

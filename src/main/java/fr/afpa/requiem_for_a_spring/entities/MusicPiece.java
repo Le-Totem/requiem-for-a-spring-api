@@ -3,15 +3,8 @@ package fr.afpa.requiem_for_a_spring.entities;
 import java.util.List;
 
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 // import jakarta.persistence.JoinColumn;
-// import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "music_piece")
@@ -34,9 +27,9 @@ public class MusicPiece {
     @OneToMany(mappedBy = "music_piece", targetEntity = Genre.class)
     private List<Genre> genres;
 
-    // // relation avec Ensemble
-    // @OneToMany(mappedBy = "music_piece", targetEntity = Group.class)
-    // private List<Group> groups;
+    @ManyToOne
+    @JoinColumn(name = "id_group")
+    private Group group;
 
     // // relation avec Media
     // @ManyToOne
@@ -95,13 +88,13 @@ public class MusicPiece {
         this.genres = genres;
     }
 
-    // public List<Group> getGroups() {
-    // return groups;
-    // }
+    public Group getGroup() {
+        return group;
+    }
 
-    // public void setGroups(List<Group> groups) {
-    // this.groups = groups;
-    // }
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 
     // public Media getMedia() {
     // return media;
