@@ -42,7 +42,9 @@ public class MusicPieceService {
      * @return Une liste de fiches morceaux
      */
     public List<MusicPieceDto> getAllByIdGroup(Integer id_group) {
-        return MusicPieceRepository.findAllByIdGroup(id_group).stream().map(musicPiece -> new MusicPieceDto(musicPiece))
+        return musicPieceRepository.findAllByIdGroup(id_group)
+                .stream()
+                .map(MusicPieceDto::new)
                 .collect(Collectors.toList());
     }
 
