@@ -1,5 +1,6 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
+import fr.afpa.requiem_for_a_spring.dtos.GenreDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,12 @@ public class Genre {
 
     public Genre() {
 
+    }
+
+    // constructeur pour le mapper Entity > DTO
+    public Genre(GenreDto genreDto) {
+        this.id = genreDto.getId();
+        this.name = genreDto.getName();
     }
 
     public Integer getId() {

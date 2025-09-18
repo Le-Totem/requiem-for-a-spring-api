@@ -6,7 +6,7 @@ import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
 
 @Service
-public class MusicPieceSession {
+public class MusicPieceMapper {
     // ENTITY TO DTO
     public MusicPieceDto convertToDto(MusicPiece musicPiece) {
         return new MusicPieceDto(musicPiece);
