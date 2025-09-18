@@ -32,4 +32,7 @@ public class MusicPieceController {
         return new ResponseEntity<>(musicPieceService.getAll(), HttpStatus.OK);
     }
 
+//    getAllByIdGroup utiliser ca
+
+
 }
