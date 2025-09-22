@@ -16,6 +16,13 @@ public class MediaInstrumentId implements Serializable {
     @Column(name = "id_instrument", nullable = false)
     private Integer idInstrument;
 
+    public MediaInstrumentId() {
+
+    }
+
+    public MediaInstrumentId(Integer id, Integer id1) {
+    }
+
     public Integer getIdMedia() {
         return idMedia;
     }

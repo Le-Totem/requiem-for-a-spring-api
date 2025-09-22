@@ -40,6 +40,13 @@ public class Media {
     @OneToMany(mappedBy = "media", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MediaInstrument> mediaInstruments = new LinkedHashSet<>();
 
+    public Media(MediaDto mediaDto) {
+    }
+
+    public Media() {
+
+    }
+
     public Integer getId() {
         return id;
     }

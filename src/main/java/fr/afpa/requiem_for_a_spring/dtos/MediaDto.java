@@ -1,11 +1,11 @@
 package fr.afpa.requiem_for_a_spring.dtos;
 
 import fr.afpa.requiem_for_a_spring.entities.Media;
-import fr.afpa.requiem_for_a_spring.entities.MediaInstrument;
 
 import fr.afpa.requiem_for_a_spring.enums.MediaType;
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MediaDto {
@@ -15,7 +15,7 @@ public class MediaDto {
     private LocalDate dateAdded;
     private LocalDate dateModified;
     private Integer trackId;
-    private String userId;
+    private UUID userId;
     private Set<Integer> instrumentIds;
 
     public MediaDto() {}
@@ -27,7 +27,7 @@ public class MediaDto {
         this.dateAdded = media.getDateAdded();
         this.dateModified = media.getDateModified();
         this.trackId = media.getIdTrack() != null ? media.getIdTrack().getId() : null;
-        this.userId = media.getIdUser() != null ? media.getIdUser().getId().toString() : null;
+        this.userId = media.getIdUser() != null ? UUID.fromString(media.getIdUser().getId().toString()) : null;
 
         this.instrumentIds = media.getMediaInstruments().stream()
                 .map(mi -> mi.getInstrument().getId())
@@ -82,11 +82,11 @@ public class MediaDto {
         this.trackId = trackId;
     }
 
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

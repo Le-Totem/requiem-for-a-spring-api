@@ -1,11 +1,7 @@
 package fr.afpa.requiem_for_a_spring.services;
 
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
-import fr.afpa.requiem_for_a_spring.entities.Instrument;
-import fr.afpa.requiem_for_a_spring.entities.Media;
-import fr.afpa.requiem_for_a_spring.entities.MediaInstrument;
-import fr.afpa.requiem_for_a_spring.entities.MediaInstrumentId;
-import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
+import fr.afpa.requiem_for_a_spring.entities.*;
 import fr.afpa.requiem_for_a_spring.repositories.InstrumentRepository;
 import fr.afpa.requiem_for_a_spring.repositories.MediaRepository;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
