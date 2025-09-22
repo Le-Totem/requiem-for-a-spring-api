@@ -31,10 +31,10 @@ public class MusicPiece {
     @JoinColumn(name = "id_group")
     private Group group;
 
-    // // relation avec Media
-    // @ManyToOne
-    // @JoinColumn(name = "id_media")
-    // private Media media;
+
+     @ManyToOne
+     @JoinColumn(name = "id_media")
+     private Media media;
 
     public MusicPiece() {
 
@@ -96,12 +96,12 @@ public class MusicPiece {
         this.group = group;
     }
 
-    // public Media getMedia() {
-    // return media;
-    // }
+    public Media getMedia() {
+    return media;
+    }
 
-    // public void setMedia(Media media) {
-    // this.media = media;
-    // }
+    public void setMedia(Media media) {
+    this.media = media;
+    }
 
 }
