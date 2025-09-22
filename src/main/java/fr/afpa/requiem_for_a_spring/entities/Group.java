@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "group")
 public class Group {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_group", nullable = false)
     private Integer id;
 
@@ -24,7 +25,6 @@ public class Group {
 
     @OneToMany(mappedBy = "group")
     private List<MusicPiece> musicPieces;
-
 
     public Group() {
 

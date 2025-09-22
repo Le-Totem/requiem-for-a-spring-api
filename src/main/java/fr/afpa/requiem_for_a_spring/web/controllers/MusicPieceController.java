@@ -50,8 +50,18 @@ public class MusicPieceController {
      * @return Une fiche morceau
      */
     @GetMapping("/{id}")
-    public ResponseEntity<MusicPieceDto> getAllMusicPiecesByIdGroup(@PathVariable Integer id) {
+    public ResponseEntity<MusicPieceDto> getOneMusicPiece(@PathVariable Integer id) {
         return new ResponseEntity<>(musicPieceService.getOneMusicPiece(id), HttpStatus.OK);
+    }
+
+    /**
+     * Requête pour récupérer toutes les fiches morceaux d'un ensemble
+     * 
+     * @return Une liste de fiches morceaux
+     */
+    @GetMapping("/group/{id}")
+    public ResponseEntity<List<MusicPieceDto>> getAllMusicPiecesByIdGroup(@PathVariable Integer id) {
+        return new ResponseEntity<>(musicPieceService.getAllByIdGroup(id), HttpStatus.OK);
     }
 
     /**
