@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
+import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
+import fr.afpa.requiem_for_a_spring.entities.UserGroup;
 import fr.afpa.requiem_for_a_spring.mappers.UserMapper;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -79,20 +81,22 @@ public class UserService {
         return userMapper.convertToDto(userRepository.save(user));
     }
 
-    // updateRoleUser(UUID id, UserDto userDto) + Role Dto
+    /**
+     * Modifie le rôle d'un utilisateur dans un ensemble
+     * 
+     * @param id_user  L'id de l'utilisateur
+     * @param id_group L'id de l'ensemble
+     * @param userDto
+     * @return Un utilisateur mis à jour
+     */
+    public UserDto updateUserRole(UUID id_user, Integer id_group, UserRoleDto userRoleDto) {
+        User user = userRepository.findById(id_user).orElse(null);
 
-    // id_user
-    // id_group
-    // role
-    // public UserDto updateUserRole(UUID id_user, UserDto userDto, UserRoleDto
-    // userRoleDto) {
-    // Optional<User> originalUser = userRepository.findById(id_user);
-    // UserGroup userGroup = userRepository.findUserGroupByIdUser(id_user);
+        UserGroup userGroup = userRepository.findUserGroupByIds(userRoleDto.getId_user(), userRoleDto.getId_group());
+        userGroup.setRole(userRoleDto.getRole());
 
-    // userGroup.setRole(userRoleDto.getRole());
-    // userRepository.save(null)
-
-    // }
+        return new UserDto(user);
+    }
 
     /**
      * Supprime un utilisateur

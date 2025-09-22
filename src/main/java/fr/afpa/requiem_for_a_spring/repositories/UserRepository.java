@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     // Récupérer les fiches morceaux d'un ensemble
     List<User> findAllUsersByIdGroup(Integer id_group);
 
-    // Récupérer un utilisateur et son ensemble
-    UserGroup findUserGroupByIdUser(UUID id);
+    // Récupérer la table de jointure user_group en fonction de l'id
+    UserGroup findUserGroupByIds(UUID id_user, Integer id_group);
+
 }
