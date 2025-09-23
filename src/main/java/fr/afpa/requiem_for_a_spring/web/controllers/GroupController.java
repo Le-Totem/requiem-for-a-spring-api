@@ -39,7 +39,7 @@ public class GroupController {
 
     @GetMapping("/{groupId}/music")
     public ResponseEntity<List<MusicPieceDto>> getMusicByGroup(@PathVariable Integer groupId) {
-        List<MusicPiece> pieces = musicPieceRepository.findAllByIdGroup(groupId);
+        List<MusicPiece> pieces = musicPieceRepository.findAllByGroup_Id(groupId);
         List<MusicPieceDto> dtos = pieces.stream().map(MusicPieceDto::new).toList();
 
         if (dtos.isEmpty()) {

@@ -22,7 +22,7 @@ public class Genre {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "id_music_piece")
+    @JoinColumn(name = "id_track")
     private MusicPiece musicPiece;
 
     public Genre() {

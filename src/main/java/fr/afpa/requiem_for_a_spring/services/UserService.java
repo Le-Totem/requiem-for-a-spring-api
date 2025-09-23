@@ -12,6 +12,7 @@ import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.entities.UserGroup;
 import fr.afpa.requiem_for_a_spring.mappers.UserMapper;
+import fr.afpa.requiem_for_a_spring.repositories.UserGroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,10 +21,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserService {
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private UserGroupRepository userGroupRepository;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, UserGroupRepository userGroupRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.userGroupRepository = userGroupRepository;
     }
 
     /**
@@ -53,7 +56,7 @@ public class UserService {
      * @return Une liste de'utilisateurs
      */
     public List<UserDto> getAllUsersByIdGroup(Integer id) {
-        return userRepository.findAllUsersByIdGroup(id).stream().map(user -> new UserDto(user))
+        return userRepository.findAllByUserGroups_Group_Id(id).stream().map(user -> new UserDto(user))
                 .collect(Collectors.toList());
     }
 
@@ -92,7 +95,8 @@ public class UserService {
     public UserDto updateUserRole(UUID id_user, Integer id_group, UserRoleDto userRoleDto) {
         User user = userRepository.findById(id_user).orElse(null);
 
-        UserGroup userGroup = userRepository.findUserGroupByIds(userRoleDto.getId_user(), userRoleDto.getId_group());
+        UserGroup userGroup = userGroupRepository.findByUser_IdAndGroup_Id(userRoleDto.getId_user(),
+                userRoleDto.getId_group());
         userGroup.setRole(userRoleDto.getRole());
 
         return new UserDto(user);
