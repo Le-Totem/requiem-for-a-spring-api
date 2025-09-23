@@ -2,7 +2,7 @@ package fr.afpa.requiem_for_a_spring.entities;
 
 import jakarta.persistence.*;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,7 +17,7 @@ public class Instrument {
     private String name;
 
     @OneToMany(mappedBy = "instrument", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MediaInstrument> mediaInstruments = new LinkedHashSet<>();
+    private Set<MediaInstrument> mediaInstruments = new HashSet<>();
 
     public Integer getId() {
         return id;

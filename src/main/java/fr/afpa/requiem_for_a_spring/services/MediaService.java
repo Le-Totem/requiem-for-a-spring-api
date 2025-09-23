@@ -76,7 +76,7 @@ public class MediaService {
                 MediaInstrument mi = new MediaInstrument();
                 mi.setMedia(savedMedia);
                 mi.setInstrument(instrument);
-                mi.setId(new MediaInstrumentId(savedMedia.getId(), instrument.getId()));
+                mi.setId(new MediaInstrument(savedMedia.getId(), instrument.getId()).getId());
 
                 savedMedia.getMediaInstruments().add(mi);
             }
