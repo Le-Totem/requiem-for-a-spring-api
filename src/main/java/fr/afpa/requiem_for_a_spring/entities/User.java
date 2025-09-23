@@ -4,12 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -30,7 +30,7 @@ public class MediaInstrument {
         return media;
     }
 
-    public void setMedia(Media idMedia) {
+    public void setMedia(Media media) {
         this.media = media;
     }
 
