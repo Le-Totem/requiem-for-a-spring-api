@@ -38,7 +38,7 @@ public class GenreService {
      * @return Une liste d'un ou plusieurs genres
      */
     public List<GenreDto> getAllGenresByIdMusicPiece(Integer id) {
-        return genreRepository.findAllByIdMusicPiece(id).stream().map(genre -> new GenreDto(genre))
+        return genreRepository.findAllByIdMusicPiece_Id(id).stream().map(genre -> new GenreDto(genre))
                 .collect(Collectors.toList());
     }
 

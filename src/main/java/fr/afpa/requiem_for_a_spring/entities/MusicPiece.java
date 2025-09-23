@@ -24,7 +24,7 @@ public class MusicPiece {
     private String description;
 
     // relation avec Genre
-    @OneToMany(mappedBy = "music_piece", targetEntity = Genre.class)
+    @OneToMany(mappedBy = "musicPiece", targetEntity = Genre.class)
     private List<Genre> genres;
 
     @ManyToOne
