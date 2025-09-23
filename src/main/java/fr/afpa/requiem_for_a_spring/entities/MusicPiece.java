@@ -1,6 +1,7 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
 import jakarta.persistence.*;
@@ -23,10 +24,6 @@ public class MusicPiece {
     @Column(nullable = true, name = "description")
     private String description;
 
-    // relation avec Genre
-    @OneToMany(mappedBy = "musicPiece", targetEntity = Genre.class)
-    private List<Genre> genres;
-
     @ManyToOne
     @JoinColumn(name = "id_group")
     private Group group;
@@ -34,6 +31,9 @@ public class MusicPiece {
     @ManyToOne
     @JoinColumn(name = "id_media")
     private Media media;
+
+    @OneToMany(mappedBy = "musicPiece", cascade = CascadeType.ALL)
+    private Set<MusicPieceGenre> musicPieceGenre = new LinkedHashSet<>();
 
     public MusicPiece() {
 
@@ -79,14 +79,6 @@ public class MusicPiece {
         this.description = description;
     }
 
-    public List<Genre> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<Genre> genres) {
-        this.genres = genres;
-    }
-
     public Group getGroup() {
         return group;
     }
@@ -101,6 +93,14 @@ public class MusicPiece {
 
     public void setMedia(Media media) {
         this.media = media;
+    }
+
+    public Set<MusicPieceGenre> getMusicPieceGenre() {
+        return musicPieceGenre;
+    }
+
+    public void setMusicPieceGenre(Set<MusicPieceGenre> musicPieceGenre) {
+        this.musicPieceGenre = musicPieceGenre;
     }
 
 }

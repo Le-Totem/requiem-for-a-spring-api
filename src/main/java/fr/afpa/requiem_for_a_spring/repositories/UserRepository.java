@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 import fr.afpa.requiem_for_a_spring.entities.User;
-import fr.afpa.requiem_for_a_spring.entities.UserGroup;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

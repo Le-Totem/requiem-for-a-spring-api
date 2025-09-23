@@ -38,10 +38,8 @@ CREATE TABLE music_piece(
    title VARCHAR(50)  NOT NULL,
    author VARCHAR(50)  NOT NULL,
    "description" VARCHAR(250) ,
-   id_genre INTEGER NOT NULL,
    id_group INTEGER NOT NULL,
    PRIMARY KEY(id_track),
-   FOREIGN KEY(id_genre) REFERENCES genre(id_genre),
    FOREIGN KEY(id_group) REFERENCES "group"(id_group)
 );
 
@@ -65,6 +63,14 @@ CREATE TABLE user_group(
    PRIMARY KEY(id_user, id_group),
    FOREIGN KEY(id_user) REFERENCES "user"(id_user),
    FOREIGN KEY(id_group) REFERENCES "group"(id_group)
+);
+
+CREATE TABLE music_piece_genre(
+   id_track INT,
+   id_genre INT,
+   PRIMARY KEY(id_track, id_genre),
+   FOREIGN KEY(id_track) REFERENCES music_piece(id_track),
+   FOREIGN KEY(id_genre) REFERENCES genre(id_genre)
 );
 
 CREATE TABLE media_instrument(
