@@ -9,7 +9,7 @@ CREATE TABLE "user"(
    email VARCHAR(50)  NOT NULL,
    "password" VARCHAR(50)  NOT NULL,
    is_validated BOOLEAN NOT NULL,
-   picture VARCHAR(50) ,
+   picture VARCHAR(150) ,
    PRIMARY KEY(id_user)
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE media(
 CREATE TABLE user_group(
    id_user UUID,
    id_group INTEGER,
-   "role" "role" NOT NULL,
+   "role" ENUM('Admin', 'Modo', 'Member') NOT NULL,
    PRIMARY KEY(id_user, id_group),
    FOREIGN KEY(id_user) REFERENCES "user"(id_user),
    FOREIGN KEY(id_group) REFERENCES "group"(id_group)
