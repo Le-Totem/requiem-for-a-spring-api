@@ -1,6 +1,8 @@
 package fr.afpa.requiem_for_a_spring.repositories;
 
 import fr.afpa.requiem_for_a_spring.entities.Media;
+import fr.afpa.requiem_for_a_spring.enums.MediaType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +17,6 @@ public interface MediaRepository extends JpaRepository<Media, Integer> {
     // tous les médias d’un utilisateur
     List<Media> findByIdUser_Id(Integer userId);
 
-    //retrouver par type (PDF, image, etc.)
-    List<Media> findByType(Enum type);
+    // retrouver par type (PDF, image, etc.)
+    List<Media> findByType(MediaType type);
 }

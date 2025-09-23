@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import fr.afpa.requiem_for_a_spring.entities.Role;
+import fr.afpa.requiem_for_a_spring.enums.Role;
 
 @Service
 public class UserRoleDto {
