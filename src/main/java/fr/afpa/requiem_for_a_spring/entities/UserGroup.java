@@ -26,7 +26,7 @@ public class UserGroup {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    public UserGroup(UserGroupId id, User user, Group group, Role role) {
+    public UserGroup() {
         this.id = new UserGroupId(user.getId(), group.getId());
         this.user = user;
         this.group = group;

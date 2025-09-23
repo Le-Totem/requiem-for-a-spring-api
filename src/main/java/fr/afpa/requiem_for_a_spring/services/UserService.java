@@ -46,6 +46,7 @@ public class UserService {
      * @return
      */
     public UserDto getOneUserById(UUID id) {
+
         return userMapper.convertToDto(userRepository.findById(id).orElse(null));
     }
 
