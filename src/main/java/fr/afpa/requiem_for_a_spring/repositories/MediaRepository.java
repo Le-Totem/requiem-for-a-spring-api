@@ -17,6 +17,8 @@ public interface MediaRepository extends JpaRepository<Media, Integer> {
     // tous les médias d’un utilisateur
     List<Media> findByIdUser_Id(UUID idUser_id);
 
+    // retrouver par type (PDF, image, etc.)
+    List<Media> findByType(MediaType type);
     //retrouver par type (PDF, image, etc.)
     List<Media> findByType(MediaType type);
 }

@@ -1,5 +1,6 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
+import fr.afpa.requiem_for_a_spring.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

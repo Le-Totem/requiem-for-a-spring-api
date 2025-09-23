@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
+import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -75,6 +76,27 @@ public class UserController {
             return new ResponseEntity<>(userService.updateUser(id, userDto), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             // La requête a échoué, l'utilisateur n'a pas été trouvé + erreur 404
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Requête pour modifier le rôle d'un utilisateur dans un ensemble
+     * 
+     * @param id_user     L'id de l'utilisateur
+     * @param id_group    L'id de l'ensemble
+     * @param userRoleDto
+     * @return Un utilisateur mis à jour
+     */
+    @PatchMapping("/group/{id_group}/user/{id_user}")
+    public ResponseEntity<UserDto> updateRoleUser(@PathVariable UUID id_user, @PathVariable Integer id_group,
+            @RequestBody UserRoleDto userRoleDto) {
+        try {
+            // La requête a réussi et le rôle de l'utilisateur a été modifié
+            return new ResponseEntity<>(userService.updateUserRole(id_user, id_group, userRoleDto), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            // La requête a échoué, l'utilisateur et/ou le group n'ont pas été trouvé +
+            // erreur 404
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
