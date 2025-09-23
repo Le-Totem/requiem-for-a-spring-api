@@ -5,24 +5,29 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "media_instrument")
 public class MediaInstrument {
-    @EmbeddedId
-    private MediaInstrumentId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    @MapsId("idMedia")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_media", nullable = false)
     private Media media;
 
-    @MapsId("idInstrument")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_instrument", nullable = false)
     private Instrument instrument;
 
-    public MediaInstrumentId getId() {
+    public MediaInstrument() {
+    }
+
+    public MediaInstrument(Integer id, Integer id1) {
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(MediaInstrumentId id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -38,8 +43,7 @@ public class MediaInstrument {
         return instrument;
     }
 
-    public void setInstrument(Instrument idInstrument) {
-        this.instrument = idInstrument;
+    public void setInstrument(Instrument instrument) {
+        this.instrument = instrument;
     }
-
 }

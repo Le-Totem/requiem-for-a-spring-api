@@ -5,7 +5,7 @@ import fr.afpa.requiem_for_a_spring.enums.MediaType;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -38,7 +38,7 @@ public class Media {
     private User idUser;
 
     @OneToMany(mappedBy = "media", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MediaInstrument> mediaInstruments = new LinkedHashSet<>();
+    private Set<MediaInstrument> mediaInstruments = new HashSet<>();
 
     public Media(MediaDto mediaDto) {
     }
