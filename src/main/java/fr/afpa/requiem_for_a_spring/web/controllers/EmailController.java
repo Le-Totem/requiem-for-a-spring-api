@@ -2,7 +2,6 @@ package fr.afpa.requiem_for_a_spring.web.controllers;
 
 import fr.afpa.requiem_for_a_spring.mailer.EmailServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

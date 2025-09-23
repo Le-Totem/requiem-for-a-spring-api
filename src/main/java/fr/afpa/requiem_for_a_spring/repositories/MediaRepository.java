@@ -19,6 +19,4 @@ public interface MediaRepository extends JpaRepository<Media, Integer> {
 
     // retrouver par type (PDF, image, etc.)
     List<Media> findByType(MediaType type);
-    //retrouver par type (PDF, image, etc.)
-    List<Media> findByType(MediaType type);
 }
