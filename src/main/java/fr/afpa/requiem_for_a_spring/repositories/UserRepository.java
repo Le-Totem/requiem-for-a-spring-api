@@ -13,9 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
     // Récupérer les fiches morceaux d'un ensemble
-    List<User> findAllUsersByIdGroup(Integer id_group);
-
-    // Récupérer la table de jointure user_group en fonction de l'id
-    UserGroup findUserGroupByIds(UUID id_user, Integer id_group);
+    List<User> findAllByUserGroups_Group_Id(Integer id_group);
 
 }

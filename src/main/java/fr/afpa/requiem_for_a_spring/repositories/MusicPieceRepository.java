@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MusicPieceRepository extends JpaRepository<MusicPiece, Integer> {
 
     // Récupérer les fiches morceaux d'un ensemble
-     List<MusicPiece> findAllByIdGroup(Integer groupId);
+    List<MusicPiece> findAllByGroup_Id(Integer groupId);
 
 }

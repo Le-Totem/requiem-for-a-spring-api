@@ -24,17 +24,16 @@ public class MusicPiece {
     private String description;
 
     // relation avec Genre
-    @OneToMany(mappedBy = "music_piece", targetEntity = Genre.class)
+    @OneToMany(mappedBy = "musicPiece", targetEntity = Genre.class)
     private List<Genre> genres;
 
     @ManyToOne
     @JoinColumn(name = "id_group")
     private Group group;
 
-
-     @ManyToOne
-     @JoinColumn(name = "id_media")
-     private Media media;
+    @ManyToOne
+    @JoinColumn(name = "id_media")
+    private Media media;
 
     public MusicPiece() {
 
@@ -97,11 +96,11 @@ public class MusicPiece {
     }
 
     public Media getMedia() {
-    return media;
+        return media;
     }
 
     public void setMedia(Media media) {
-    this.media = media;
+        this.media = media;
     }
 
 }

@@ -32,8 +32,8 @@ public class User {
     @Column(nullable = true, name = "picture")
     private String picture;
 
-    // @OneToMany(mappedBy = "user", targetEntity = Media.class)
-    // private List<Media> medias;
+    @OneToMany(mappedBy = "idUser", targetEntity = Media.class)
+    private List<Media> medias;
 
     @OneToMany(mappedBy = "user", targetEntity = UserGroup.class)
     private List<UserGroup> userGroups;
