@@ -11,10 +11,6 @@ import fr.afpa.requiem_for_a_spring.entities.Genre;
 public interface GenreRepository extends JpaRepository<Genre, Integer> {
 
     // Récupérer les fiches morceaux d'un ensemble
-<<<<<<< HEAD
-    List<Genre> findAllByIdMusicPiece_Id(Integer musicPieceId);
-=======
-    List<Genre> findAllByMusicPiece_Id(Integer id);
->>>>>>> d32daf3364368aad7c69f8bb59b29b29c7f815dc
+    List<Genre> findAllByMusicPieceGenre_Genre_Id(Integer id);
 
 }
