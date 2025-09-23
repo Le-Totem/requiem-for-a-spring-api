@@ -7,11 +7,10 @@ import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(nullable = false)
     private UUID id;
 
     @Column(nullable = false, name = "firstname")
