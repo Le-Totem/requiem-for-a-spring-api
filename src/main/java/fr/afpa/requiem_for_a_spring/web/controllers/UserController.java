@@ -3,15 +3,11 @@ package fr.afpa.requiem_for_a_spring.web.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import fr.afpa.requiem_for_a_spring.dtos.InviteUserDto;
+import fr.afpa.requiem_for_a_spring.services.InvitMembreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
@@ -25,8 +21,11 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService) {
+    private final InvitMembreService invitMembreService;
+
+    public UserController(UserService userService, InvitMembreService invitMembreService) {
         this.userService = userService;
+        this.invitMembreService = invitMembreService;
     }
 
     /**
@@ -77,6 +76,22 @@ public class UserController {
         } catch (EntityNotFoundException e) {
             // La requête a échoué, l'utilisateur n'a pas été trouvé + erreur 404
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/invite")
+    public ResponseEntity<UserDto> inviteUser(@RequestBody InviteUserDto request) {
+        try {
+            UserDto invited = invitMembreService.inviteUserToGroup(
+                    request.getEmail(),
+                    request.getGroup(),
+                    request.getRole()
+            );
+            return new ResponseEntity<>(invited, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

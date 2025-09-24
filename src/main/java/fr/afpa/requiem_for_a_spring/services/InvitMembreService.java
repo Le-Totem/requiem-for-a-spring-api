@@ -8,7 +8,9 @@ import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.mailer.EmailServiceImpl;
 import fr.afpa.requiem_for_a_spring.repositories.UserGroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class InvitMembreService {
 
     private final EmailServiceImpl emailService;
@@ -30,6 +32,7 @@ public class InvitMembreService {
             user = new User();
             user.setEmail(email);
             user.setIs_validated(false);
+            user = userRepository.save(user);
         }
 
         // Vérifie que groupe existe
