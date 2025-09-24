@@ -73,12 +73,9 @@ public class MediaService {
                 Instrument instrument = instrumentRepository.findById(instId)
                         .orElseThrow(() -> new RuntimeException("Instrument non trouvé : id=" + instId));
 
-                MediaInstrument mi = new MediaInstrument();
-                mi.setMedia(savedMedia);
-                mi.setInstrument(instrument);
-                mi.setId(new MediaInstrument(savedMedia.getId(), instrument.getId()).getId());
-
+                MediaInstrument mi = new MediaInstrument(savedMedia, instrument);
                 savedMedia.getMediaInstruments().add(mi);
+
             }
             savedMedia = mediaRepository.save(savedMedia); // persister la relation
         }

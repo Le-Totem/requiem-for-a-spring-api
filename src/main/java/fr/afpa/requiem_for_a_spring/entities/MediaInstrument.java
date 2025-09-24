@@ -3,32 +3,25 @@ package fr.afpa.requiem_for_a_spring.entities;
 import jakarta.persistence.*;
 
 @Entity
+@IdClass(MediaInstrumentId.class)
 @Table(name = "media_instrument")
 public class MediaInstrument {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
+    @Id
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_media", nullable = false)
     private Media media;
 
+    @Id
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_instrument", nullable = false)
     private Instrument instrument;
 
-    public MediaInstrument() {
-    }
+    public MediaInstrument() {}
 
-    public MediaInstrument(Integer id, Integer id1) {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public MediaInstrument(Media media, Instrument instrument) {
+        this.media = media;
+        this.instrument = instrument;
     }
 
     public Media getMedia() {
