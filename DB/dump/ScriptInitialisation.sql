@@ -1,6 +1,6 @@
-CREATE TYPE mediatype AS ENUM ('PDF', 'image', 'musescore', 'TuxGuitar');
+CREATE TYPE mediatype AS ENUM ('PDF', 'IMAGE', 'MUSECORE', 'TUXGUITAR');
 
-CREATE TYPE user_role AS ENUM ('Admin', 'Moderateur', 'Utilisateur');
+CREATE TYPE user_role AS ENUM ('ADMIN', 'MODERATEUR', 'UTILISATEUR');
 
 CREATE TABLE "user"(
    id UUID,
