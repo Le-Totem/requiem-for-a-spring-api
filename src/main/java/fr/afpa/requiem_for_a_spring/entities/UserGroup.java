@@ -1,5 +1,8 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -25,8 +28,9 @@ public class UserGroup {
     @JoinColumn(name = "id_group")
     private Group group;
 
-    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, columnDefinition = "user_role")
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private Role role;
 
     public UserGroup() {
