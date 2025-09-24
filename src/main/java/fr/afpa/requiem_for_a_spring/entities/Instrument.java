@@ -10,7 +10,7 @@ import java.util.Set;
 public class Instrument {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_instrument", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Column(name = "name", nullable = false, length = 50)
