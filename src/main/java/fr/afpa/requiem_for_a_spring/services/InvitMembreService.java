@@ -4,6 +4,7 @@ import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.entities.UserGroup;
+import fr.afpa.requiem_for_a_spring.entities.UserGroupId;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.mailer.EmailServiceImpl;
 import fr.afpa.requiem_for_a_spring.repositories.UserGroupRepository;
@@ -17,7 +18,8 @@ public class InvitMembreService {
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
 
-    public InvitMembreService(EmailServiceImpl emailService, UserRepository userRepository, UserGroupRepository userGroupRepository) {
+    public InvitMembreService(EmailServiceImpl emailService, UserRepository userRepository,
+            UserGroupRepository userGroupRepository) {
         this.emailService = emailService;
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
@@ -36,12 +38,10 @@ public class InvitMembreService {
         }
 
         // Vérifie que groupe existe
-        UserGroup userGroup = userGroupRepository.findByUser_IdAndGroup_Id(user.getId(), group.getId());
+        UserGroupId userGroupId = new UserGroupId(user.getId(), group.getId());
+        UserGroup userGroup = userGroupRepository.findById(userGroupId).orElse(null);
         if (userGroup == null) {
-            userGroup = new UserGroup();
-            userGroup.setUser(user);
-            userGroup.setGroup(group);
-            userGroup.setRole(role);
+            userGroup = new UserGroup(user, group, role);
             userGroupRepository.save(userGroup);
         } else {
             // Utilisateur est déjà dans le groupe

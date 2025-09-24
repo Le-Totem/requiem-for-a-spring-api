@@ -14,6 +14,10 @@ public class UserGroupId implements Serializable {
     @Column(name = "id_group")
     private Integer id_group;
 
+    public UserGroupId() {
+
+    }
+
     public UserGroupId(UUID id_user, Integer id_group) {
         this.id_user = id_user;
         this.id_group = id_group;

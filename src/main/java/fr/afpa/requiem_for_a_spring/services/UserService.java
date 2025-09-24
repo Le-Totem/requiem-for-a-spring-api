@@ -11,6 +11,7 @@ import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.entities.UserGroup;
+import fr.afpa.requiem_for_a_spring.entities.UserGroupId;
 import fr.afpa.requiem_for_a_spring.mappers.UserMapper;
 import fr.afpa.requiem_for_a_spring.repositories.UserGroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
@@ -109,13 +110,15 @@ public class UserService {
      * @return Un utilisateur mis à jour
      */
     public UserDto updateUserRole(UUID id_user, Integer id_group, UserRoleDto userRoleDto) {
-        User user = userRepository.findById(id_user).orElse(null);
+        UserGroupId userGroupId = new UserGroupId(id_user, id_group);
 
-        UserGroup userGroup = userGroupRepository.findByUser_IdAndGroup_Id(userRoleDto.getId_user(),
-                userRoleDto.getId_group());
+        UserGroup userGroup = userGroupRepository.findById(userGroupId)
+                .orElseThrow(() -> new EntityNotFoundException("Relation user/group introuvable."));
+
         userGroup.setRole(userRoleDto.getRole());
+        userGroupRepository.save(userGroup);
 
-        return new UserDto(user);
+        return new UserDto(userGroup.getUser());
     }
 
     /**

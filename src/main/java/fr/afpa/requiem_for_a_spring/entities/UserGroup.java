@@ -4,6 +4,8 @@ import fr.afpa.requiem_for_a_spring.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -24,9 +26,14 @@ public class UserGroup {
     private Group group;
 
     @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public UserGroup() {
+
+    }
+
+    public UserGroup(User user, Group group, Role role) {
         this.id = new UserGroupId(user.getId(), group.getId());
         this.user = user;
         this.group = group;

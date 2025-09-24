@@ -80,14 +80,16 @@ public class UserController {
         }
     }
 
+    /**
+     * Requête pour inviter un utilisateur dans un ensemble
+     */
     @PostMapping("/invite")
     public ResponseEntity<UserDto> inviteUser(@RequestBody InviteUserDto request) {
         try {
             UserDto invited = invitMembreService.inviteUserToGroup(
                     request.getEmail(),
                     request.getGroup(),
-                    request.getRole()
-            );
+                    request.getRole());
             return new ResponseEntity<>(invited, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -98,6 +100,7 @@ public class UserController {
 
     /**
      * Requête pour modifier le rôle d'un utilisateur dans un ensemble
+     * TODO: Refaire la requête
      * 
      * @param id_user     L'id de l'utilisateur
      * @param id_group    L'id de l'ensemble
@@ -105,7 +108,7 @@ public class UserController {
      * @return Un utilisateur mis à jour
      */
     @PatchMapping("/group/{id_group}/user/{id_user}")
-    public ResponseEntity<UserDto> updateRoleUser(@PathVariable UUID id_user, @PathVariable Integer id_group,
+    public ResponseEntity<UserDto> updateRoleUser(@PathVariable Integer id_group, @PathVariable UUID id_user,
             @RequestBody UserRoleDto userRoleDto) {
         try {
             // La requête a réussi et le rôle de l'utilisateur a été modifié
