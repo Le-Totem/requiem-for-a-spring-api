@@ -1,6 +1,6 @@
 CREATE TYPE mediatype AS ENUM ('PDF', 'image', 'musescore', 'TuxGuitar');
 
-CREATE TYPE "role" AS ENUM ('Admin', 'Moderateur', 'Utilisateur');
+CREATE TYPE user_role AS ENUM ('Admin', 'Moderateur', 'Utilisateur');
 
 CREATE TABLE "user"(
    id UUID,
@@ -59,7 +59,7 @@ CREATE TABLE media(
 CREATE TABLE user_group(
    id_user UUID,
    id_group INTEGER,
-   "role" ENUM('Admin', 'Modo', 'Member') NOT NULL,
+   "role" user_role NOT NULL,
    PRIMARY KEY(id_user, id_group),
    FOREIGN KEY(id_user) REFERENCES "user"(id),
    FOREIGN KEY(id_group) REFERENCES "group"(id)
