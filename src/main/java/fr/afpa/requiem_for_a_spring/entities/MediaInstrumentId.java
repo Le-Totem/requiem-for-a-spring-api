@@ -27,4 +27,20 @@ public class MediaInstrumentId implements Serializable {
     public int hashCode() {
         return Objects.hash(media, instrument);
     }
+
+    public Integer getMedia() {
+        return media;
+    }
+
+    public void setMedia(Integer media) {
+        this.media = media;
+    }
+
+    public Integer getInstrument() {
+        return instrument;
+    }
+
+    public void setInstrument(Integer instrument) {
+        this.instrument = instrument;
+    }
 }

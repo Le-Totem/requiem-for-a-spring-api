@@ -17,14 +17,22 @@ public class MediaController {
         this.mediaService = mediaService;
     }
 
-    // Récupérer tous les médias
+    /**
+     * Requête pour récupérer tous les media existants. ✅
+     *
+     * @return
+     */
     @GetMapping
     public ResponseEntity<List<MediaDto>> getAllMedia() {
         List<MediaDto> mediaList = mediaService.getAll();
         return ResponseEntity.ok(mediaList);
     }
 
-    // Récupérer un média par ID
+    /**
+     * Requête pour récupérer un existants en fonction de son id. ✅
+     *
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<MediaDto> getMediaById(@PathVariable Integer id) {
         MediaDto dto = mediaService.getById(id);
@@ -34,7 +42,11 @@ public class MediaController {
         return ResponseEntity.ok(dto);
     }
 
-    // Créer un média avec instruments
+    /**
+     * Requête pour créer un media. ✅
+     *
+     * @return
+     */
     @PostMapping
     public ResponseEntity<MediaDto> createMedia(@RequestBody MediaDto dto) {
         try {
@@ -45,6 +57,11 @@ public class MediaController {
         }
     }
 
+    /**
+     * Requête pour supprimer un media. ✅
+     *
+     * @return
+     */
     // Supprimer un média
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMedia(@PathVariable Integer id) {

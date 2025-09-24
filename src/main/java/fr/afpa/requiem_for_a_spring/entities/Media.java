@@ -3,6 +3,8 @@ package fr.afpa.requiem_for_a_spring.entities;
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
 import fr.afpa.requiem_for_a_spring.enums.MediaType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -18,6 +20,7 @@ public class Media {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, columnDefinition = "mediatype")
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private MediaType type;
 
     @Column(name = "url", length = 100)

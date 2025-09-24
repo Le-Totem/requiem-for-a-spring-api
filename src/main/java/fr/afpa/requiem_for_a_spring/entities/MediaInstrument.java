@@ -8,12 +8,12 @@ import jakarta.persistence.*;
 public class MediaInstrument {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "id_media", nullable = false)
     private Media media;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "id_instrument", nullable = false)
     private Instrument instrument;
 

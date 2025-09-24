@@ -49,12 +49,12 @@ public class GroupController {
     }
 
     /**
-     * Requête pour récupérer les fiche morceaux d'un ensemble.
+     * Requête pour récupérer les fiche morceaux d'un ensemble. ✅
      * 
      * @param groupId
      * @return
      */
-    @GetMapping("/{groupId}/music")
+    @GetMapping("/{groupId}/track")
     public ResponseEntity<List<MusicPieceDto>> getMusicByGroup(@PathVariable Integer groupId) {
         List<MusicPiece> pieces = musicPieceRepository.findAllByGroup_Id(groupId);
         List<MusicPieceDto> dtos = pieces.stream().map(MusicPieceDto::new).toList();

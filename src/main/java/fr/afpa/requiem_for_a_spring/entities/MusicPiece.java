@@ -1,6 +1,7 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
@@ -28,9 +29,8 @@ public class MusicPiece {
     @JoinColumn(name = "id_group")
     private Group group;
 
-    @ManyToOne
-    @JoinColumn(name = "id_media")
-    private Media media;
+    @OneToMany(mappedBy = "idTrack")
+    private List<Media> medias;
 
     @OneToMany(mappedBy = "musicPiece", cascade = CascadeType.ALL)
     private Set<MusicPieceGenre> musicPieceGenre = new LinkedHashSet<>();
@@ -87,12 +87,12 @@ public class MusicPiece {
         this.group = group;
     }
 
-    public Media getMedia() {
-        return media;
+    public List<Media> getMedias() {
+        return medias;
     }
 
-    public void setMedia(Media media) {
-        this.media = media;
+    public void setMedias(List<Media> medias) {
+        this.medias = medias;
     }
 
     public Set<MusicPieceGenre> getMusicPieceGenre() {
