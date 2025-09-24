@@ -2,6 +2,7 @@ package fr.afpa.requiem_for_a_spring.repositories;
 
 import fr.afpa.requiem_for_a_spring.entities.MediaInstrument;
 import fr.afpa.requiem_for_a_spring.entities.MediaInstrumentId;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

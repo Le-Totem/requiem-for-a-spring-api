@@ -35,7 +35,6 @@ public class UserDto {
         this.password = user.getPassword();
         this.is_validated = user.getIs_validated();
         this.picture = user.getPicture();
-        this.userGroups = user.getUserGroups();
     }
 
     public UUID getId() {

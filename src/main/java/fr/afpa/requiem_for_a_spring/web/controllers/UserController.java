@@ -99,8 +99,7 @@ public class UserController {
     }
 
     /**
-     * Requête pour modifier le rôle d'un utilisateur dans un ensemble
-     * TODO: Refaire la requête
+     * Requête pour modifier le rôle d'un utilisateur dans un ensemble ✅
      * 
      * @param id_user     L'id de l'utilisateur
      * @param id_group    L'id de l'ensemble
