@@ -76,12 +76,27 @@ public class UserService {
             throw new EntityNotFoundException("L'utilisateur' est introuvable.");
         }
 
-        // Retourne une erreur si l'id ne correspond à aucun id en BDD
-        if (!id.equals(userDto.getId())) {
-            throw new IllegalArgumentException("L'id ne correspond à aucun utilisateur.");
+        User user = originalUser.get();
+
+        if (userDto.getLastname() != null) {
+            user.setLastname(userDto.getLastname());
+        }
+        if (userDto.getFirstname() != null) {
+            user.setFirstname(userDto.getFirstname());
+        }
+        if (userDto.getPassword() != null) {
+            user.setPassword(userDto.getPassword());
+        }
+        if (userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail());
+        }
+        if (userDto.getIs_validated() != null) {
+            user.setIs_validated(userDto.getIs_validated());
+        }
+        if (userDto.getPicture() != null) {
+            user.setPicture(userDto.getPicture());
         }
 
-        User user = originalUser.get();
         return userMapper.convertToDto(userRepository.save(user));
     }
 

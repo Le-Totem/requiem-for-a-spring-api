@@ -80,5 +80,3 @@ CREATE TABLE media_instrument(
    FOREIGN KEY(id_media) REFERENCES media(id),
    FOREIGN KEY(id_instrument) REFERENCES instrument(id)
 );
-
-
