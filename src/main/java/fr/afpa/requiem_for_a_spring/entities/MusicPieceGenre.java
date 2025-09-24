@@ -1,37 +1,46 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "music_piece_genre")
 public class MusicPieceGenre {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @EmbeddedId
+    private MusicPieceGenreId id;
+
+    @ManyToOne
+    @MapsId("id_music_piece")
     @JoinColumn(name = "id_track", nullable = false)
     private MusicPiece musicPiece;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
+    @MapsId("id_genre")
     @JoinColumn(name = "id_genre", nullable = false)
     private Genre genre;
 
-    public Integer getId() {
+    public MusicPieceGenre() {
+    }
+
+    public MusicPieceGenre(MusicPiece musicPiece, Genre genre) {
+        this.id = new MusicPieceGenreId(musicPiece.getId(), genre.getId());
+        this.musicPiece = musicPiece;
+        this.genre = genre;
+    }
+
+    public MusicPieceGenreId getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(MusicPieceGenreId id) {
         this.id = id;
     }
-
+    
     public MusicPiece getMusicPiece() {
         return musicPiece;
     }
@@ -47,5 +56,6 @@ public class MusicPieceGenre {
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
+
 
 }

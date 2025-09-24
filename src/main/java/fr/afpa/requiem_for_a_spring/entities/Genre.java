@@ -1,7 +1,6 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 import fr.afpa.requiem_for_a_spring.dtos.GenreDto;
 import jakarta.persistence.CascadeType;
@@ -24,8 +23,8 @@ public class Genre {
     @Column(nullable = false, name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
-    private Set<MusicPieceGenre> musicPieceGenre = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, targetEntity = MusicPieceGenre.class)
+    private List<MusicPieceGenre> musicPieceGenre;
 
     public Genre() {
 
@@ -53,12 +52,12 @@ public class Genre {
         this.name = name;
     }
 
-    public Set<MusicPieceGenre> getMusicPieceGenre() {
+    public List<MusicPieceGenre> getMusicPieceGenres() {
         return musicPieceGenre;
     }
 
-    public void setMusicPieceGenre(Set<MusicPieceGenre> musicPieceGenre) {
-        this.musicPieceGenre = musicPieceGenre;
+    public void setMusicPieceGenres(List<MusicPieceGenre> musicPieceGenres) {
+        this.musicPieceGenre = musicPieceGenres;
     }
 
 }

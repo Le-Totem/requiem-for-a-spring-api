@@ -34,7 +34,7 @@ public class MusicPieceController {
     }
 
     /**
-     * Requête pour récupérer toutes les fiches morceaux
+     * Requête pour récupérer toutes les fiches morceaux ✅
      * 
      * @return Une liste de fiches morceaux
      */
@@ -44,7 +44,7 @@ public class MusicPieceController {
     }
 
     /**
-     * Requête pour récupérer une fiche morceau en fonction de son id
+     * Requête pour récupérer une fiche morceau en fonction de son id ✅
      * 
      * @param id L'id de la fiche morceau
      * @return Une fiche morceau
@@ -55,7 +55,7 @@ public class MusicPieceController {
     }
 
     /**
-     * Requête pour récupérer toutes les fiches morceaux d'un ensemble
+     * Requête pour récupérer toutes les fiches morceaux d'un ensemble ✅
      * 
      * @return Une liste de fiches morceaux
      */
@@ -65,7 +65,8 @@ public class MusicPieceController {
     }
 
     /**
-     * Requête pour récupérer tous les genres d'une fiche morceau
+     * Requête pour récupérer tous les genres d'une fiche morceau ✅
+     * TODO: à retester quand il y a des genres
      * 
      * @param id
      * @return
@@ -76,7 +77,7 @@ public class MusicPieceController {
     }
 
     /**
-     * Requête pour créer une fiche morceau
+     * Requête pour créer une fiche morceau ✅
      * 
      * @param musicPieceDto
      * @return
@@ -87,7 +88,7 @@ public class MusicPieceController {
     }
 
     /**
-     * Requête pour créer un genre
+     * Requête pour créer un genre ✅
      * 
      * @param genreDto
      * @return
@@ -96,6 +97,20 @@ public class MusicPieceController {
     public ResponseEntity<GenreDto> createGenre(@RequestBody GenreDto genreDto) {
         return new ResponseEntity<>(genreService.createGenre(genreDto), HttpStatus.CREATED);
     }
+
+    /**
+     * Requête pour ajouter un ou plusieurs genres à une fiche morceau ✅
+     * 
+     * @param entity
+     * @return
+     */
+    @PostMapping("/{id}/add-genre")
+    public ResponseEntity<List<GenreDto>> addGenresToMusicPiece(@PathVariable Integer id,
+            @RequestBody List<GenreDto> genres) {
+        return new ResponseEntity<>(genreService.addGenres(id, genres), HttpStatus.CREATED);
+    }
+
+    // TODO: Afficher les genres d'une fiche morceau
 
     /**
      * Requête pour modifier une fiche morceau

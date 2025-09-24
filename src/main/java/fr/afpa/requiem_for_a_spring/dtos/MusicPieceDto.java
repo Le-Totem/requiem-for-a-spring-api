@@ -12,6 +12,8 @@ public class MusicPieceDto {
     private String author;
     @JsonProperty("description")
     private String description;
+    @JsonProperty("id_group")
+    private Integer id_group;
 
     public MusicPieceDto() {
 
@@ -23,6 +25,9 @@ public class MusicPieceDto {
         this.title = musicPiece.getTitle();
         this.author = musicPiece.getAuthor();
         this.description = musicPiece.getDescription();
+        if (musicPiece.getGroup() != null) {
+            this.id_group = musicPiece.getGroup().getId();
+        }
     }
 
     public Integer getId() {
@@ -56,4 +61,13 @@ public class MusicPieceDto {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Integer getId_group() {
+        return id_group;
+    }
+
+    public void setId_group(Integer id_group) {
+        this.id_group = id_group;
+    }
+
 }

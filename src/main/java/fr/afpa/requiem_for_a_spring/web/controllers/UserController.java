@@ -82,6 +82,8 @@ public class UserController {
 
     /**
      * Requête pour inviter un utilisateur dans un ensemble
+     * TODO: vérifier que l'utilisateur s'ajoute dans l'ensemble via la table
+     * user_group
      */
     @PostMapping("/invite")
     public ResponseEntity<UserDto> inviteUser(@RequestBody InviteUserDto request) {

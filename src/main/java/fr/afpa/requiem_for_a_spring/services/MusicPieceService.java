@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
 import fr.afpa.requiem_for_a_spring.mappers.MusicPieceMapper;
+import fr.afpa.requiem_for_a_spring.repositories.GroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,11 +18,13 @@ import jakarta.servlet.http.HttpServletResponse;
 public class MusicPieceService {
 
     private MusicPieceRepository musicPieceRepository;
-
+    private GroupRepository groupRepository;
     private MusicPieceMapper musicPieceMapper;
 
-    public MusicPieceService(MusicPieceRepository musicPieceRepository, MusicPieceMapper musicPieceMapper) {
+    public MusicPieceService(MusicPieceRepository musicPieceRepository, GroupRepository groupRepository,
+            MusicPieceMapper musicPieceMapper) {
         this.musicPieceRepository = musicPieceRepository;
+        this.groupRepository = groupRepository;
         this.musicPieceMapper = musicPieceMapper;
     }
 
@@ -42,6 +45,11 @@ public class MusicPieceService {
      * @return Une liste de fiches morceaux
      */
     public List<MusicPieceDto> getAllByIdGroup(Integer id_group) {
+
+        if (!groupRepository.existsById(id_group)) {
+            throw new EntityNotFoundException("Le groupe avec l'id " + id_group + " est introuvable.");
+        }
+
         return musicPieceRepository.findAllByGroup_Id(id_group)
                 .stream()
                 .map(MusicPieceDto::new)
