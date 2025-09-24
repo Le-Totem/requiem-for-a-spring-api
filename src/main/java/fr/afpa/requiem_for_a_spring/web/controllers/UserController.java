@@ -30,7 +30,7 @@ public class UserController {
     }
 
     /**
-     * Requête pour récupérer tous les utilisateurs
+     * Requête pour récupérer tous les utilisateurs ✅
      * 
      * @return
      */
@@ -40,7 +40,8 @@ public class UserController {
     }
 
     /**
-     * Requête pour récupérer un utilisateur en fonction de son id
+     * Requête pour récupérer un utilisateur en fonction de son id ✅
+     * 
      * 
      * @param id L'id de l'utilisateur à récupérer
      * @return
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     /**
-     * Requête pour récupérer les utilisateurs d'un ensemble
+     * Requête pour récupérer les utilisateurs d'un ensemble ✅
      * 
      * @param id L'id de l'ensemble
      * @return
@@ -62,7 +63,7 @@ public class UserController {
     }
 
     /**
-     * Requête pour modifier un utilisateur
+     * Requête pour modifier un utilisateur ✅
      * 
      * @param id      L'id de l'utilisateur à modifier
      * @param userDto L'utilisateur à modifier
@@ -102,7 +103,7 @@ public class UserController {
     }
 
     /**
-     * Requête pour supprimer un utilisateur
+     * Requête pour supprimer un utilisateur ✅
      * 
      * @param id       L'id de l'utilisateur à supprimer
      * @param response Réponse HTTP renvoyée
