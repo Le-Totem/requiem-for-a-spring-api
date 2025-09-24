@@ -13,7 +13,7 @@ import java.util.Set;
 public class Media {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_media", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Enumerated(EnumType.STRING)
