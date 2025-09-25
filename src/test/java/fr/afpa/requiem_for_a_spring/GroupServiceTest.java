@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GroupServiceTests {
+public class GroupServiceTest {
 
     @Mock
     private GroupRepository groupRepository;
