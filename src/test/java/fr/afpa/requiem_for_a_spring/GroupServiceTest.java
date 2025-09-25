@@ -5,7 +5,6 @@ import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.mappers.GroupMapper;
 import fr.afpa.requiem_for_a_spring.repositories.GroupRepository;
 import fr.afpa.requiem_for_a_spring.services.GroupService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class GroupServiceTests {
+public class GroupServiceTest {
 
     @Mock
     private GroupRepository groupRepository;
