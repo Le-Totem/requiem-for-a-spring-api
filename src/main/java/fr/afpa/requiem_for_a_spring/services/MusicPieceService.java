@@ -1,12 +1,12 @@
 package fr.afpa.requiem_for_a_spring.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
+import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
 import fr.afpa.requiem_for_a_spring.mappers.MusicPieceMapper;
 import fr.afpa.requiem_for_a_spring.repositories.GroupRepository;
@@ -87,20 +87,26 @@ public class MusicPieceService {
      * @return
      */
     public MusicPieceDto updateMusicPiece(Integer id, MusicPieceDto musicPieceDto) {
-        Optional<MusicPiece> originalMusic = musicPieceRepository.findById(id);
+        MusicPiece originalMusic = musicPieceRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("La fiche morceau est introuvable."));
 
-        // Retourne une erreur si la fiche morceau n'existe pas
-        if (originalMusic.isEmpty()) {
-            throw new EntityNotFoundException("La fiche morceau est introuvable.");
+        if (musicPieceDto.getTitle() != null) {
+            originalMusic.setTitle(musicPieceDto.getTitle());
+        }
+        if (musicPieceDto.getAuthor() != null) {
+            originalMusic.setAuthor(musicPieceDto.getAuthor());
+        }
+        if (musicPieceDto.getDescription() != null) {
+            originalMusic.setDescription(musicPieceDto.getDescription());
+        }
+        if (musicPieceDto.getId_group() != null) {
+            Group group = new Group();
+            group.setId(musicPieceDto.getId_group());
+            originalMusic.setGroup(group);
         }
 
-        // Retourne une erreur si l'id ne correspond à aucun id en BDD
-        if (!id.equals(musicPieceDto.getId())) {
-            throw new IllegalArgumentException("L'id ne correspond à aucune fiche morceau.");
-        }
-
-        MusicPiece musicPiece = originalMusic.get();
-        return musicPieceMapper.convertToDto(musicPieceRepository.save(musicPiece));
+        MusicPiece updatedMusicPiece = musicPieceRepository.save(originalMusic);
+        return musicPieceMapper.convertToDto(updatedMusicPiece);
     }
 
     /**

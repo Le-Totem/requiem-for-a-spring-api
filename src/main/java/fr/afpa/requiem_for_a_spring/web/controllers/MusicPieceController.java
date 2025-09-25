@@ -66,7 +66,6 @@ public class MusicPieceController {
 
     /**
      * Requête pour récupérer tous les genres d'une fiche morceau ✅
-     * TODO: à retester quand il y a des genres
      * 
      * @param id
      * @return
@@ -110,10 +109,8 @@ public class MusicPieceController {
         return new ResponseEntity<>(genreService.addGenres(id, genres), HttpStatus.CREATED);
     }
 
-    // TODO: Afficher les genres d'une fiche morceau
-
     /**
-     * Requête pour modifier une fiche morceau
+     * Requête pour modifier une fiche morceau ✅
      * 
      * @param id            L'id de la fiche morceau à modifier
      * @param musicPieceDto
@@ -132,7 +129,7 @@ public class MusicPieceController {
     }
 
     /**
-     * Requête pour supprimer une fiche morceau
+     * Requête pour supprimer une fiche morceau ✅
      * 
      * @param id       L'id de la fiche morceau à supprimer
      * @param response Réponse HTTP renvoyée
