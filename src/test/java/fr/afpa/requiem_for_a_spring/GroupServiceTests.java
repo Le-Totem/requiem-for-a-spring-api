@@ -5,7 +5,6 @@ import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.mappers.GroupMapper;
 import fr.afpa.requiem_for_a_spring.repositories.GroupRepository;
 import fr.afpa.requiem_for_a_spring.services.GroupService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @ExtendWith(MockitoExtension.class)
 public class GroupServiceTests {
@@ -64,7 +62,6 @@ public class GroupServiceTests {
         Mockito.verify(groupRepository).findById(1);
         Mockito.verify(groupMapper).convertToDto(group);
 
-
     }
 
     @Test
@@ -103,7 +100,6 @@ public class GroupServiceTests {
         Mockito.verify(groupMapper).convertToDto(savedEntity); // Vérifie que le nom est correct
     }
 
-
     @Test
     public void testDeleteById() {
         // Act
@@ -112,7 +108,5 @@ public class GroupServiceTests {
         // Assert
         Mockito.verify(groupRepository).deleteById(1);
     }
-
-
 
 }
