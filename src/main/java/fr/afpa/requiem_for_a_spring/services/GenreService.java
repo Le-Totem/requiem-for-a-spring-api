@@ -50,7 +50,11 @@ public class GenreService {
      * @return Une liste d'un ou plusieurs genres
      */
     public List<GenreDto> getAllGenresByIdMusicPiece(Integer id) {
-        return genreRepository.findAllByMusicPieceGenre_Genre_Id(id).stream().map(genre -> new GenreDto(genre))
+        if (!musicPieceRepository.existsById(id)) {
+            throw new EntityNotFoundException("Morceau introuvable avec id " + id);
+        }
+        return musicPieceGenreRepository.findAllByMusicPiece_Id(id).stream()
+                .map(genre -> new GenreDto(genre.getGenre()))
                 .collect(Collectors.toList());
     }
 
