@@ -129,6 +129,6 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     public void removeUser(@PathVariable UUID id, HttpServletResponse response) {
-        userService.removeMusicPiece(id, response);
+        userService.deleteUser(id, response);
     }
 }

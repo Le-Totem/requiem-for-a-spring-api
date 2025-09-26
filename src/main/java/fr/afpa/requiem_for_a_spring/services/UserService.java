@@ -127,7 +127,7 @@ public class UserService {
      * @param id       L'id de l'utilisateur à supprimer
      * @param response Réponse HTTP renvoyée
      */
-    public void removeMusicPiece(UUID id, HttpServletResponse response) {
+    public void deleteUser(UUID id, HttpServletResponse response) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
             // La requête est réussie et aucune nouvelle information à retourner

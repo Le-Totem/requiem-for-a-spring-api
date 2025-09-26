@@ -1,6 +1,5 @@
 package fr.afpa.requiem_for_a_spring;
 
-import fr.afpa.requiem_for_a_spring.dtos.GroupDto;
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
 import fr.afpa.requiem_for_a_spring.entities.*;
 import fr.afpa.requiem_for_a_spring.enums.MediaType;
@@ -36,13 +35,11 @@ public class MediaServiceTest {
     @Mock
     private MusicPieceRepository musicPieceRepository;
 
-
     @Mock
     private UserRepository userRepository;
 
     @Mock
     private InstrumentRepository instrumentRepository;
-
 
     @InjectMocks
     private MediaService mediaService;
@@ -123,7 +120,6 @@ public class MediaServiceTest {
         verify(mediaRepository, atLeastOnce()).save(any(Media.class));
     }
 
-
     @Test
     public void testDelete() {
         // Arrange
@@ -140,6 +136,5 @@ public class MediaServiceTest {
         Mockito.verify(mediaRepository).delete(media);
 
     }
-
 
 }

@@ -20,4 +20,20 @@ public class MusicPieceGenreId implements Serializable {
         this.id_genre = id_genre;
     }
 
+    public Integer getId_music_piece() {
+        return id_music_piece;
+    }
+
+    public void setId_music_piece(Integer id_music_piece) {
+        this.id_music_piece = id_music_piece;
+    }
+
+    public Integer getId_genre() {
+        return id_genre;
+    }
+
+    public void setId_genre(Integer id_genre) {
+        this.id_genre = id_genre;
+    }
+
 }

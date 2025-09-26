@@ -23,4 +23,20 @@ public class UserGroupId implements Serializable {
         this.id_group = id_group;
     }
 
+    public UUID getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(UUID id_user) {
+        this.id_user = id_user;
+    }
+
+    public Integer getId_group() {
+        return id_group;
+    }
+
+    public void setId_group(Integer id_group) {
+        this.id_group = id_group;
+    }
+
 }
