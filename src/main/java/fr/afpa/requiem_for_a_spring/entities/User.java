@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false, name = "is_validated")
-    private Boolean is_validated;
+    private Boolean is_validated  = false;
 
     @Column(nullable = true, name = "picture")
     private String picture;

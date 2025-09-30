@@ -1,4 +1,4 @@
-package fr.afpa.requiem_for_a_spring.services.jwt;
+package fr.afpa.requiem_for_a_spring.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
