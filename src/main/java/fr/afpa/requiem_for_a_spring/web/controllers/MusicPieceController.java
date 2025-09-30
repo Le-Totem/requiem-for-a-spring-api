@@ -41,7 +41,6 @@ public class MusicPieceController {
      * @return Une liste de fiches morceaux
      */
     @GetMapping
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<MusicPieceDto>> getAllMusicPieces() {
         return new ResponseEntity<>(musicPieceService.getAllMusicPieces(), HttpStatus.OK);
     }
@@ -53,7 +52,6 @@ public class MusicPieceController {
      * @return Une fiche morceau
      */
     @GetMapping("/{id}")
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<MusicPieceDto> getOneMusicPiece(@PathVariable Integer id) {
         return new ResponseEntity<>(musicPieceService.getOneMusicPiece(id), HttpStatus.OK);
     }
@@ -64,7 +62,6 @@ public class MusicPieceController {
      * @return Une liste de fiches morceaux
      */
     @GetMapping("/group/{id}")
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<MusicPieceDto>> getAllMusicPiecesByIdGroup(@PathVariable Integer id) {
         return new ResponseEntity<>(musicPieceService.getAllByIdGroup(id), HttpStatus.OK);
     }
@@ -76,7 +73,6 @@ public class MusicPieceController {
      * @return
      */
     @GetMapping("/{id}/all-genres")
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<GenreDto>> getAllGenres(@PathVariable Integer id) {
         return new ResponseEntity<>(genreService.getAllGenresByIdMusicPiece(id), HttpStatus.OK);
     }

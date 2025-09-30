@@ -47,6 +47,8 @@ public class SecurityConfig {
                 // Désactiver CSRF proprement
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // Requêtes api/auth publiques (login et inscription)
+                        .requestMatchers("/api/auth/**").permitAll()
                         // Seul un ADMIN peut supprimer un groupe
                         .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
                         // Seul un ADMIN peut valider les modifications d'un document
@@ -58,8 +60,8 @@ public class SecurityConfig {
                         // Un utilisateur ne peut pas faire de GET sur les utilisateurs
                         .requestMatchers(HttpMethod.GET, "/api/users/**").denyAll()
                         // Un utilisateur est autorisé à faire des GET sur les autres endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("UTILISATEUR", "MODERATEUR", "ADMIN")
                         // Endpoints accessibles uniquement par un ADMIN ou un MODO
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")

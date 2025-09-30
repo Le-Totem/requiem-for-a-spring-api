@@ -25,7 +25,6 @@ public class MediaController {
      * @return
      */
     @GetMapping
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<MediaDto>> getAllMedia() {
         List<MediaDto> mediaList = mediaService.getAll();
         return ResponseEntity.ok(mediaList);
@@ -37,7 +36,6 @@ public class MediaController {
      * @return
      */
     @GetMapping("/{id}")
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<MediaDto> getMediaById(@PathVariable Integer id) {
         MediaDto dto = mediaService.getById(id);
         if (dto == null) {

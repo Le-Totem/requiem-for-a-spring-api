@@ -2,7 +2,6 @@ package fr.afpa.requiem_for_a_spring.services;
 
 import fr.afpa.requiem_for_a_spring.dtos.LoginUserDto;
 import fr.afpa.requiem_for_a_spring.dtos.RegisterUserDto;
-import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;

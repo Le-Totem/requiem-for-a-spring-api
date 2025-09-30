@@ -30,7 +30,6 @@ public class GroupController {
      * @return
      */
     @GetMapping
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<GroupDto>> getAll() {
         List<GroupDto> groups = groupService.findAll();
         return ResponseEntity.ok(groups);
@@ -43,7 +42,6 @@ public class GroupController {
      * @return
      */
     @GetMapping("/{id}")
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<GroupDto> getById(@PathVariable Integer id) {
         GroupDto group = groupService.findById(id);
         if (group == null) {
@@ -59,7 +57,6 @@ public class GroupController {
      * @return
      */
     @GetMapping("/{groupId}/track")
-    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<MusicPieceDto>> getMusicByGroup(@PathVariable Integer groupId) {
         List<MusicPiece> pieces = musicPieceRepository.findAllByGroup_Id(groupId);
         List<MusicPieceDto> dtos = pieces.stream().map(MusicPieceDto::new).toList();
@@ -78,7 +75,6 @@ public class GroupController {
      * @return
      */
     @PostMapping("/create")
-    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<GroupDto> create(@RequestBody GroupDto groupDto) {
         GroupDto saved = groupService.save(groupDto);
         return ResponseEntity.status(201).body(saved);
