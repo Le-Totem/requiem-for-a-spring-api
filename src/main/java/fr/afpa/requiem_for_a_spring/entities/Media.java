@@ -18,6 +18,9 @@ public class Media {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "title", nullable = false, length = 255)
+    private String title;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, columnDefinition = "mediatype")
     @JdbcType(PostgreSQLEnumJdbcType.class)
@@ -112,5 +115,13 @@ public class Media {
 
     public void setMediaInstruments(Set<MediaInstrument> mediaInstruments) {
         this.mediaInstruments = mediaInstruments;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

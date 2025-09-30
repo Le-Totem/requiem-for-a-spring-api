@@ -45,6 +45,7 @@ CREATE TABLE music_piece(
 
 CREATE TABLE media(
    id SERIAL,
+    title VARCHAR(200) NOT NULL,
    "type" mediatype NOT NULL,
    "url" VARCHAR(100) ,
    date_added DATE NOT NULL,

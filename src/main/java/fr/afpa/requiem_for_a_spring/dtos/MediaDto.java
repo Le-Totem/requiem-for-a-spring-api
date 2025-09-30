@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MediaDto {
+    private String title;
     private Integer id;
     private MediaType type;
     private String url;
@@ -23,6 +24,7 @@ public class MediaDto {
     public MediaDto(Media media) {
         this.id = media.getId();
         this.type = media.getType();
+        this.title = media.getTitle();
         this.url = media.getUrl();
         this.dateAdded = media.getDateAdded();
         this.dateModified = media.getDateModified();
@@ -48,6 +50,14 @@ public class MediaDto {
 
     public void setType(MediaType type) {
         this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getUrl() {

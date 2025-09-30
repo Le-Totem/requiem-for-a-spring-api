@@ -50,6 +50,7 @@ public class MediaService {
     public MediaDto createMedia(MediaDto dto) {
         Media media = new Media();
         media.setType(dto.getType());
+        media.setTitle(dto.getTitle());
         media.setUrl(dto.getUrl());
         media.setDateAdded(LocalDate.now());
         media.setDateModified(dto.getDateModified());
