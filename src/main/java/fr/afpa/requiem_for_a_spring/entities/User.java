@@ -7,6 +7,8 @@ import java.util.UUID;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import jakarta.persistence.*;
 
@@ -30,7 +32,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false, name = "is_validated")
-    private Boolean is_validated  = false;
+    private Boolean is_validated = false;
 
     @Column(nullable = true, name = "picture")
     private String picture;
@@ -58,6 +60,7 @@ public class User implements UserDetails {
 
     // JWT
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -68,21 +71,25 @@ public class User implements UserDetails {
         return email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;

@@ -1,7 +1,6 @@
 package fr.afpa.requiem_for_a_spring;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import fr.afpa.requiem_for_a_spring.config.SecurityConfigForTest;
 import fr.afpa.requiem_for_a_spring.dtos.GroupDto;
-import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
 import fr.afpa.requiem_for_a_spring.services.GroupService;
@@ -55,7 +53,7 @@ public class GroupControllerTest {
         when(groupService.findAll()).thenReturn(groups);
 
         mockMvc.perform(get("/api/groups")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].name").value("Chorale"))
@@ -71,7 +69,7 @@ public class GroupControllerTest {
         when(groupService.findById(group.getId())).thenReturn(group);
 
         mockMvc.perform(get("/api/groups/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Chorale"));
@@ -90,7 +88,7 @@ public class GroupControllerTest {
         when(musicPieceRepository.findAllByGroup_Id(1)).thenReturn(Arrays.asList(piece1, piece2));
 
         mockMvc.perform(get("/api/groups/1/track")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].title").value("Requiem"))
@@ -115,8 +113,8 @@ public class GroupControllerTest {
                 """;
 
         mockMvc.perform(post("/api/groups/create")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(3))
                 .andExpect(jsonPath("$.name").value("Nouvelle Chorale"));
