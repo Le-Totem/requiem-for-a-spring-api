@@ -1,6 +1,8 @@
 package fr.afpa.requiem_for_a_spring.web.controllers;
 
+import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
+import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.MediaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ public class MediaController {
      * @return
      */
     @GetMapping
+    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<MediaDto>> getAllMedia() {
         List<MediaDto> mediaList = mediaService.getAll();
         return ResponseEntity.ok(mediaList);
@@ -34,6 +37,7 @@ public class MediaController {
      * @return
      */
     @GetMapping("/{id}")
+    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<MediaDto> getMediaById(@PathVariable Integer id) {
         MediaDto dto = mediaService.getById(id);
         if (dto == null) {
@@ -48,6 +52,7 @@ public class MediaController {
      * @return
      */
     @PostMapping
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<MediaDto> createMedia(@RequestBody MediaDto dto) {
         try {
             MediaDto created = mediaService.createMedia(dto);
@@ -64,6 +69,7 @@ public class MediaController {
      */
     // Supprimer un média
     @DeleteMapping("/{id}")
+    @RequireRole(role = Role.ADMIN)
     public ResponseEntity<Void> deleteMedia(@PathVariable Integer id) {
         try {
             mediaService.deleteById(id);

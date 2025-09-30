@@ -2,6 +2,7 @@ package fr.afpa.requiem_for_a_spring.config.jwt;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -46,8 +47,26 @@ public class SecurityConfig {
                 // Désactiver CSRF proprement
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // autorise tout (GET/POST/PATCH/DELETE...)
-                )
+                        // Seul un ADMIN peut supprimer un groupe
+                        .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
+                        // Seul un ADMIN peut valider les modifications d'un document
+                        // TODO: faire la requête pour valider les modifs d'un document
+                        .requestMatchers(HttpMethod.POST, "/api/media/validate/**").hasRole("ADMIN")
+                        // Seul un ADMIN peut valider les modifications d'un membre
+                        // TODO: faire la requête pour valider les modifs d'un membre
+                        .requestMatchers(HttpMethod.POST, "/api/users/validate/**").hasRole("ADMIN")
+                        // Un utilisateur ne peut pas faire de GET sur les utilisateurs
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").denyAll()
+                        // Un utilisateur est autorisé à faire des GET sur les autres endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("UTILISATEUR", "MODERATEUR", "ADMIN")
+                        // Endpoints accessibles uniquement par un ADMIN ou un MODO
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+
+                        // Tout le reste est permis (GET/POST/PATCH/DELETE...)
+                        .anyRequest().permitAll())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

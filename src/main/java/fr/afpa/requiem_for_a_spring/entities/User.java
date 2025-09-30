@@ -63,7 +63,10 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return userGroups.stream()
+                .map(role -> "ROLE_" + role.getRole().name())
+                .map(roleName -> (GrantedAuthority) () -> roleName)
+                .toList();
     }
 
     @Override

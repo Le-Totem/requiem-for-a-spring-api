@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.GenreDto;
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
+import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.GenreService;
 import fr.afpa.requiem_for_a_spring.services.MusicPieceService;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,6 +41,7 @@ public class MusicPieceController {
      * @return Une liste de fiches morceaux
      */
     @GetMapping
+    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<MusicPieceDto>> getAllMusicPieces() {
         return new ResponseEntity<>(musicPieceService.getAllMusicPieces(), HttpStatus.OK);
     }
@@ -50,6 +53,7 @@ public class MusicPieceController {
      * @return Une fiche morceau
      */
     @GetMapping("/{id}")
+    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<MusicPieceDto> getOneMusicPiece(@PathVariable Integer id) {
         return new ResponseEntity<>(musicPieceService.getOneMusicPiece(id), HttpStatus.OK);
     }
@@ -60,6 +64,7 @@ public class MusicPieceController {
      * @return Une liste de fiches morceaux
      */
     @GetMapping("/group/{id}")
+    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<MusicPieceDto>> getAllMusicPiecesByIdGroup(@PathVariable Integer id) {
         return new ResponseEntity<>(musicPieceService.getAllByIdGroup(id), HttpStatus.OK);
     }
@@ -71,6 +76,7 @@ public class MusicPieceController {
      * @return
      */
     @GetMapping("/{id}/all-genres")
+    @RequireRole(role = Role.UTILISATEUR)
     public ResponseEntity<List<GenreDto>> getAllGenres(@PathVariable Integer id) {
         return new ResponseEntity<>(genreService.getAllGenresByIdMusicPiece(id), HttpStatus.OK);
     }
@@ -82,6 +88,7 @@ public class MusicPieceController {
      * @return
      */
     @PostMapping
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<MusicPieceDto> createMusicPiece(@RequestBody MusicPieceDto musicPieceDto) {
         return new ResponseEntity<>(musicPieceService.createMusicPiece(musicPieceDto), HttpStatus.CREATED);
     }
@@ -93,6 +100,7 @@ public class MusicPieceController {
      * @return
      */
     @PostMapping("/add-genre")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<GenreDto> createGenre(@RequestBody GenreDto genreDto) {
         return new ResponseEntity<>(genreService.createGenre(genreDto), HttpStatus.CREATED);
     }
@@ -104,6 +112,7 @@ public class MusicPieceController {
      * @return
      */
     @PostMapping("/{id}/add-genre")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<List<GenreDto>> addGenresToMusicPiece(@PathVariable Integer id,
             @RequestBody List<GenreDto> genres) {
         return new ResponseEntity<>(genreService.addGenres(id, genres), HttpStatus.CREATED);
@@ -117,6 +126,7 @@ public class MusicPieceController {
      * @return
      */
     @PatchMapping("/{id}")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<MusicPieceDto> updateMusicPiece(@PathVariable Integer id,
             @RequestBody MusicPieceDto musicPieceDto) {
         try {
@@ -135,6 +145,7 @@ public class MusicPieceController {
      * @param response Réponse HTTP renvoyée
      */
     @DeleteMapping("/{id}")
+    @RequireRole(role = Role.ADMIN)
     public void removeMusicPiece(@PathVariable Integer id, HttpServletResponse response) {
         musicPieceService.removeMusicPiece(id, response);
     }

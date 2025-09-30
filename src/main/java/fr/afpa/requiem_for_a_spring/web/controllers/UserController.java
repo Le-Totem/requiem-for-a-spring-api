@@ -3,6 +3,7 @@ package fr.afpa.requiem_for_a_spring.web.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.InviteUserDto;
 import fr.afpa.requiem_for_a_spring.services.InvitMembreService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
+import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,6 +36,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/all")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
@@ -46,6 +49,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/{id}")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<UserDto> getOneUserById(@PathVariable UUID id) {
         return new ResponseEntity<>(userService.getOneUserById(id), HttpStatus.OK);
     }
@@ -57,6 +61,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/group/{id}")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<List<UserDto>> getAllUsersByIdGroup(@PathVariable Integer id) {
         return new ResponseEntity<>(userService.getAllUsersByIdGroup(id), HttpStatus.OK);
     }
@@ -69,6 +74,7 @@ public class UserController {
      * @return L'utilisateur modifié
      */
     @PatchMapping("/{id}")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<UserDto> updateUser(@PathVariable UUID id,
             @RequestBody UserDto userDto) {
         try {
@@ -86,6 +92,7 @@ public class UserController {
      * user_group
      */
     @PostMapping("/invite")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<UserDto> inviteUser(@RequestBody InviteUserDto request) {
         try {
             UserDto invited = invitMembreService.inviteUserToGroup(
@@ -109,6 +116,7 @@ public class UserController {
      * @return Un utilisateur mis à jour
      */
     @PatchMapping("/group/{id_group}/user/{id_user}")
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<UserDto> updateRoleUser(@PathVariable Integer id_group, @PathVariable UUID id_user,
             @RequestBody UserRoleDto userRoleDto) {
         try {
@@ -128,6 +136,7 @@ public class UserController {
      * @param response Réponse HTTP renvoyée
      */
     @DeleteMapping("/{id}")
+    @RequireRole(role = Role.ADMIN)
     public void removeUser(@PathVariable UUID id, HttpServletResponse response) {
         userService.deleteUser(id, response);
     }
