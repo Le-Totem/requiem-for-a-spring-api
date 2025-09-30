@@ -117,7 +117,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void patchOneUser() throws Exception {
+    public void testPatchOneUser() throws Exception {
         UserDto originalUser = new UserDto();
         originalUser.setId(UUID.randomUUID());
         originalUser.setFirstname("Michel");
