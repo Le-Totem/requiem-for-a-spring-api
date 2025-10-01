@@ -67,14 +67,13 @@ public class RequireRoleAspect {
         } else {
             // Vérification globale (par exemple ADMIN global, MODO global, etc.)
             boolean hasRequiredRole = user.getUserGroups().stream()
-                    .anyMatch(userGroup -> userGroup.getRole().equals(requiredRole));
+                    .anyMatch(userGroup -> permissionService.hasAtLeastRole(userGroup.getRole(), requiredRole));
 
             if (!hasRequiredRole) {
                 throw new ResponseStatusException(FORBIDDEN,
                         "L'utilisateur " + user.getEmail() + " n'a pas le rôle global " + requiredRole);
             }
 
-            System.out.println(">>> Vérification réussie, on laisse passer");
         }
     }
 }

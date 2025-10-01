@@ -38,4 +38,22 @@ public class PermissionService {
                             user.getEmail(), role, id_group));
         }
     }
+
+    public boolean hasAtLeastRole(Role userRole, Role requiredRole) {
+        // Définition de l'ordre hiérarchique
+        int rankUser = switch (userRole) {
+            case UTILISATEUR -> 1;
+            case MODERATEUR -> 2;
+            case ADMIN -> 3;
+        };
+
+        int rankRequired = switch (requiredRole) {
+            case UTILISATEUR -> 1;
+            case MODERATEUR -> 2;
+            case ADMIN -> 3;
+        };
+
+        return rankUser >= rankRequired;
+    }
+
 }

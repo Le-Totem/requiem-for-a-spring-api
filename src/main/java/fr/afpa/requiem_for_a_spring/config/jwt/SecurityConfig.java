@@ -53,10 +53,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users/validate/**").hasRole("ADMIN")
 
                         // Bloquer GET /api/users/** pour tous
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").denyAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("MODERATEUR", "ADMIN")
 
                         // Modérateur / Admin global pour le reste des endpoints API
-                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("UTILISATEUR", "MODERATEUR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/groups/create").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")

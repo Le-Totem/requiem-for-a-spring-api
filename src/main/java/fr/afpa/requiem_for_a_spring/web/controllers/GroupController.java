@@ -70,6 +70,7 @@ public class GroupController {
 
     /**
      * Requête pour créer un ensemble. ✅
+     * TODO: Passer le rôle en Admin lorsque l'utilisateur créé un groupe
      * 
      * @param groupDto
      * @return
@@ -80,7 +81,6 @@ public class GroupController {
         System.out.println("DEBUG: POST /api/groups/create => saved id=" + saved.getId());
         return ResponseEntity.status(201).body(saved);
     }
-
 
     /**
      * Requête pour supprimer un ensemble. ✅
