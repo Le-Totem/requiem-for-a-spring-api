@@ -10,6 +10,7 @@ import fr.afpa.requiem_for_a_spring.services.GroupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -77,8 +78,10 @@ public class GroupController {
     @PostMapping("/create")
     public ResponseEntity<GroupDto> create(@RequestBody GroupDto groupDto) {
         GroupDto saved = groupService.save(groupDto);
+        System.out.println("DEBUG: POST /api/groups/create => saved id=" + saved.getId());
         return ResponseEntity.status(201).body(saved);
     }
+
 
     /**
      * Requête pour supprimer un ensemble. ✅
