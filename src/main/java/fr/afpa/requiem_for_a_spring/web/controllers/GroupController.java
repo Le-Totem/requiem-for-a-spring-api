@@ -77,8 +77,10 @@ public class GroupController {
     @PostMapping("/create")
     public ResponseEntity<GroupDto> create(@RequestBody GroupDto groupDto) {
         GroupDto saved = groupService.save(groupDto);
+        System.out.println("DEBUG: POST /api/groups/create => saved id=" + saved.getId());
         return ResponseEntity.status(201).body(saved);
     }
+
 
     /**
      * Requête pour supprimer un ensemble. ✅

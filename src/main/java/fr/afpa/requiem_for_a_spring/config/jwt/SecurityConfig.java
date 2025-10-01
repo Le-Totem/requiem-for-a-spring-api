@@ -1,5 +1,6 @@
 package fr.afpa.requiem_for_a_spring.config.jwt;
 
+import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,11 +22,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
-
 import java.util.List;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -39,58 +38,73 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider)
-            throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+            AuthenticationProvider authenticationProvider) throws Exception {
         http
-                // Active la config CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // Désactiver CSRF proprement
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Requêtes api/auth publiques (login et inscription)
+                        // Routes publiques
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Tout le reste est permis (GET/POST/PATCH/DELETE...)
+                        // Admin global
+                        .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/media/validate/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users/validate/**").hasRole("ADMIN")
+
+                        // Bloquer GET /api/users/** pour tous
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").denyAll()
+
+                        // Modérateur / Admin global pour le reste des endpoints API
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/groups/create").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+
+                        // Tout le reste → autorisé
                         .anyRequest().permitAll())
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(401);
                             response.setContentType("application/json");
-                            response.getWriter().write(
-                                    "{\"error\":\"Unauthorized\",\"message\":\""
-                                            + authException.getMessage()
-                                            + "\"}");
+                            response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\""
+                                    + authException.getMessage() + "\"}");
                         }));
+
         return http.build();
     }
 
+    // CORS
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
+    // UserDetailsService
     @Bean
     UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    // PasswordEncoder
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // AuthenticationProvider
     @Bean
     AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder) {
@@ -99,6 +113,7 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    // AuthenticationManager
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

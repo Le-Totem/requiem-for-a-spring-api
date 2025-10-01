@@ -40,8 +40,11 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "idUser", targetEntity = Media.class)
     private List<Media> medias;
 
+    //EAGER force Hibernate à charger les groupes immédiatement,
+    //donc le filtre JWT peut fonctionner normalement et récupérer les rôles.
     @OneToMany(mappedBy = "user", targetEntity = UserGroup.class, fetch = FetchType.EAGER)
     private List<UserGroup> userGroups;
+
 
     public User() {
 
