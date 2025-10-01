@@ -33,7 +33,7 @@ public class Invitation {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_group", nullable = false)
-    private Group id_group;
+    private Group group;
 
     public Invitation() {
 
@@ -44,7 +44,7 @@ public class Invitation {
         this.email = invitationDto.getEmail();
         this.status = invitationDto.getStatus();
         this.created_at = invitationDto.getCreated_at();
-        this.id_group = invitationDto.getId_group();
+        this.group = invitationDto.getGroup();
     }
 
     public Integer getId() {
@@ -79,12 +79,12 @@ public class Invitation {
         this.created_at = created_at;
     }
 
-    public Group getId_group() {
-        return id_group;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setId_group(Group id_group) {
-        this.id_group = id_group;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
 }

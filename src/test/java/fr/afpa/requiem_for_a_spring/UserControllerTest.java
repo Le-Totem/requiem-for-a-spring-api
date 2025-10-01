@@ -38,8 +38,7 @@ public class UserControllerTest {
     @MockitoBean
     private UserService userService;
 
-    @MockitoBean
-    private InvitMembreService invitMembreService;
+
 
     @Test
     public void getAll() throws Exception {
