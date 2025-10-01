@@ -16,6 +16,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -23,14 +24,19 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import fr.afpa.requiem_for_a_spring.config.SecurityConfigForTest;
+import fr.afpa.requiem_for_a_spring.config.jwt.JwtService;
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
+import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.Group;
+import fr.afpa.requiem_for_a_spring.enums.Role;
+import fr.afpa.requiem_for_a_spring.services.InvitationService;
 import fr.afpa.requiem_for_a_spring.services.UserService;
 import fr.afpa.requiem_for_a_spring.web.controllers.UserController;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebMvcTest(UserController.class)
 @Import(SecurityConfigForTest.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +45,10 @@ public class UserControllerTest {
     private UserService userService;
 
     @MockitoBean
-    private InvitMembreService invitMembreService;
+    private InvitationService invitationService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @Test
     public void getAll() throws Exception {
@@ -149,7 +158,29 @@ public class UserControllerTest {
     }
 
     // TODO: faire le test unitaire pour l'invitation d'un utilisateur
-    // TODO: faire le test unitaire pour modifier le rôle d'un utilisateur
+
+    @Test
+    public void testUpdateUserRole() throws Exception {
+        UUID id_user = UUID.randomUUID();
+        Integer id_group = 1;
+
+        UserDto userDto = new UserDto();
+        userDto.setId(id_user);
+        userDto.setEmail("mimi@mail.com");
+
+        UserRoleDto userRoleDto = new UserRoleDto();
+        userRoleDto.setRole(Role.MODERATEUR);
+
+        when(userService.updateUserRole(eq(id_user), eq(id_group), any(UserRoleDto.class)))
+                .thenReturn(userDto);
+
+        mockMvc.perform(patch("/api/users/group/" + id_group + "/user/" + id_user)
+                .contentType("application/json")
+                .content("{\"role\":\"MODERATEUR\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id_user.toString()))
+                .andExpect(jsonPath("$.email").value("mimi@mail.com"));
+    }
 
     @Test
     public void testDeleteUser() throws Exception {

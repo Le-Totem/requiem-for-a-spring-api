@@ -1,6 +1,7 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -39,4 +40,19 @@ public class UserGroupId implements Serializable {
         this.id_group = id_group;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof UserGroupId))
+            return false;
+        UserGroupId that = (UserGroupId) o;
+        return Objects.equals(id_user, that.id_user) &&
+                Objects.equals(id_group, that.id_group);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id_user, id_group);
+    }
 }

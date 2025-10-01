@@ -12,13 +12,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.entities.UserGroup;
 import fr.afpa.requiem_for_a_spring.entities.UserGroupId;
+import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.mappers.UserMapper;
+import fr.afpa.requiem_for_a_spring.repositories.UserGroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import fr.afpa.requiem_for_a_spring.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +39,9 @@ public class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
+
+    @Mock
+    private UserGroupRepository userGroupRepository;
 
     @Test
     public void testFindAll() {
@@ -129,7 +136,34 @@ public class UserServiceTest {
         Mockito.verify(userRepository).save(Mockito.any(User.class));
     }
 
-    // TODO: faire le test unitaire pour changer le role d'un utilisateur
+    @Test
+    public void testUpdateUserRole() {
+        User user = new User();
+        user.setId(UUID.randomUUID());
+        user.setEmail("test@mail.com");
+        user.setPassword("secret");
+
+        Group group = new Group();
+        group.setId(1);
+        group.setName("Test Group");
+
+        UserGroup userGroup = new UserGroup(user, group, Role.UTILISATEUR);
+        UserRoleDto userRoleDto = new UserRoleDto();
+        userRoleDto.setRole(Role.MODERATEUR);
+
+        when(userGroupRepository.findById(new UserGroupId(user.getId(), group.getId())))
+                .thenReturn(Optional.of(userGroup));
+        when(userGroupRepository.save(any(UserGroup.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UserDto result = userService.updateUserRole(user.getId(), group.getId(), userRoleDto);
+
+        assertNotNull(result);
+        assertEquals(user.getId(), result.getId());
+        assertEquals(Role.MODERATEUR, userGroup.getRole());
+
+        Mockito.verify(userGroupRepository).findById(new UserGroupId(user.getId(), group.getId()));
+        Mockito.verify(userGroupRepository).save(userGroup);
+    }
 
     @Test
     public void testDeleteUser() {
