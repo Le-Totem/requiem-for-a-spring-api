@@ -2,15 +2,20 @@ package fr.afpa.requiem_for_a_spring.web.controllers;
 
 import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.GroupDto;
+import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
 import fr.afpa.requiem_for_a_spring.services.GroupService;
+import fr.afpa.requiem_for_a_spring.services.InvitationService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -18,10 +23,13 @@ public class GroupController {
 
     private final GroupService groupService;
     private final MusicPieceRepository musicPieceRepository;
+    private final InvitationService invitationService;
 
-    public GroupController(GroupService groupService, MusicPieceRepository musicPieceRepository) {
+    public GroupController(GroupService groupService, MusicPieceRepository musicPieceRepository,
+            InvitationService invitationService) {
         this.groupService = groupService;
         this.musicPieceRepository = musicPieceRepository;
+        this.invitationService = invitationService;
     }
 
     /**
@@ -51,7 +59,7 @@ public class GroupController {
     }
 
     /**
-     * Requête pour récupérer les fiche morceaux d'un ensemble. ✅
+     * Requête pour récupérer les fiches morceaux d'un ensemble. ✅
      * 
      * @param groupId
      * @return
@@ -66,6 +74,18 @@ public class GroupController {
         }
 
         return ResponseEntity.ok(dtos);
+    }
+
+    /**
+     * Requête pour récupérer les invitations d'un ensemble
+     * 
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/invitations")
+    @RequireRole(role = Role.MODERATEUR)
+    public ResponseEntity<List<InvitationDto>> getInvitations(@PathVariable Integer id) {
+        return new ResponseEntity<>(invitationService.getAllInvitations(id), HttpStatus.OK);
     }
 
     /**
