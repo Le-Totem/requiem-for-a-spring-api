@@ -9,9 +9,8 @@ import fr.afpa.requiem_for_a_spring.entities.Invitation;
 
 @Repository
 public interface InvitationRepository extends JpaRepository<Invitation, Integer> {
-    
-    // Récupérer tous les invitations d'un ensemble
-    List<Invitation> findById_Group(Integer id_group);
 
-    boolean existsByEmailAndId_Group_Id(String email, Integer id_group);
+    // Récupérer toutes les invitations pour un groupe donné
+    List<Invitation> findByGroup_Id(Integer groupId);
+
 }

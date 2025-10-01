@@ -26,6 +26,9 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<MusicPiece> musicPieces;
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    private List<Invitation> invitations;
+
     public Group() {
 
     }

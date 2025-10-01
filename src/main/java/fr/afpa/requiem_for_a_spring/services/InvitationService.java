@@ -41,16 +41,15 @@ public class InvitationService {
      * @return
      */
     public List<InvitationDto> getAllInvitations(Integer id_group) {
-        return invitationRepository.findById_Group(id_group)
+        return invitationRepository.findByGroup_Id(id_group)
                 .stream()
                 .map(invitation -> new InvitationDto(invitation))
                 .collect(Collectors.toList());
     }
 
     public InvitationDto createInvitation(InvitationDto dto) {
-        Group group = groupRepository.findById(dto.getId_group().getId())
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Groupe introuvable avec id=" + dto.getId_group().getId()));
+        Group group = groupRepository.findById(dto.getGroup().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Groupe introuvable avec id=" + dto.getGroup().getId()));
 
         // Vérifie si l'utilisateur invité existe déjà
         Optional<User> invitedUser = userRepository.findByEmail(dto.getEmail());
@@ -72,7 +71,7 @@ public class InvitationService {
 
         Invitation invitation = new Invitation();
         invitation.setEmail(dto.getEmail());
-        invitation.setId_group(group);
+        invitation.setGroup(group);
         invitation.setStatus(Status.PENDING);
         invitation.setCreated_at(new Date());
 
