@@ -40,7 +40,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "idUser", targetEntity = Media.class)
     private List<Media> medias;
 
-    @OneToMany(mappedBy = "user", targetEntity = UserGroup.class)
+    @OneToMany(mappedBy = "user", targetEntity = UserGroup.class, fetch = FetchType.EAGER)
     private List<UserGroup> userGroups;
 
     public User() {

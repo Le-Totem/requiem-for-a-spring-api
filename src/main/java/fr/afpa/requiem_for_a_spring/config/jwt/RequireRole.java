@@ -9,9 +9,4 @@ import java.lang.annotation.*;
 @Documented
 public @interface RequireRole {
     Role role();
-
-    // Dans les controllers
-    // @RequireRole(role = Role.ADMIN)
-    // @RequireRole(role = Role.MODERATEUR)
-    // @RequireRole(role = Role.UTILISATEUR)
 }

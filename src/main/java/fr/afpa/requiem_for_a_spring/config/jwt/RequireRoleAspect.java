@@ -2,6 +2,7 @@ package fr.afpa.requiem_for_a_spring.config.jwt;
 
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
+import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -17,21 +18,37 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class RequireRoleAspect {
 
     private final PermissionService permissionService;
+    private final UserRepository userRepository;
 
-    public RequireRoleAspect(PermissionService permissionService) {
+    public RequireRoleAspect(PermissionService permissionService, UserRepository userRepository) {
         this.permissionService = permissionService;
+        this.userRepository = userRepository;
     }
 
     @Before("@annotation(requireRole)")
     public void checkRole(JoinPoint joinPoint, RequireRole requireRole) {
-        // Rôle attendu
+        System.out.println(">>> RequireRoleAspect déclenché sur " + joinPoint.getSignature());
+
         Role requiredRole = requireRole.role();
+        System.out.println(">>> Rôle requis : " + requiredRole);
 
-        // Utilisateur courant (depuis Spring Security)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+        System.out.println(">>> Authentication = " + authentication);
 
-        // On cherche l'integer du groupe dans les arguments de la méthode
+        Object principal = authentication.getPrincipal();
+        System.out.println(">>> Principal = " + principal + " (" + principal.getClass() + ")");
+
+        User user;
+        if (principal instanceof User) {
+            user = (User) principal;
+        } else if (principal instanceof String email) {
+            user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalStateException("Utilisateur introuvable"));
+        } else {
+            throw new IllegalStateException("Type de principal inattendu : " + principal.getClass());
+        }
+
+        // Vérifie si la méthode a un paramètre id_group
         Integer id_group = null;
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof Integer) {
@@ -40,15 +57,24 @@ public class RequireRoleAspect {
             }
         }
 
-        if (id_group == null) {
-            throw new IllegalStateException("Impossible de trouver un id_group dans les paramètres de la méthode.");
-        }
+        if (id_group != null) {
+            // Vérification du rôle dans un groupe spécifique
+            if (!permissionService.hasRoleInGroup(user, id_group, requiredRole)) {
+                throw new ResponseStatusException(FORBIDDEN,
+                        "L'utilisateur " + user.getEmail() + " n'a pas le rôle " + requiredRole
+                                + " dans le groupe " + id_group);
+            }
+        } else {
+            // Vérification globale (par exemple ADMIN global, MODO global, etc.)
+            boolean hasRequiredRole = user.getUserGroups().stream()
+                    .anyMatch(userGroup -> userGroup.getRole().equals(requiredRole));
 
-        // Vérifie les permissions
-        if (!permissionService.hasRoleInGroup(user, id_group, requiredRole)) {
-            throw new ResponseStatusException(FORBIDDEN,
-                    "L'utilisateur " + user.getEmail() + " n'a pas le rôle " + requiredRole + " dans le groupe "
-                            + id_group);
+            if (!hasRequiredRole) {
+                throw new ResponseStatusException(FORBIDDEN,
+                        "L'utilisateur " + user.getEmail() + " n'a pas le rôle global " + requiredRole);
+            }
+
+            System.out.println(">>> Vérification réussie, on laisse passer");
         }
     }
 }
