@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import fr.afpa.requiem_for_a_spring.config.SecurityConfigForTest;
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import fr.afpa.requiem_for_a_spring.entities.Group;
-import fr.afpa.requiem_for_a_spring.services.InvitMembreService;
 import fr.afpa.requiem_for_a_spring.services.UserService;
 import fr.afpa.requiem_for_a_spring.web.controllers.UserController;
 import jakarta.servlet.http.HttpServletResponse;

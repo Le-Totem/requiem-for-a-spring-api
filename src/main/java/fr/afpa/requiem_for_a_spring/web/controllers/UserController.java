@@ -1,13 +1,10 @@
 package fr.afpa.requiem_for_a_spring.web.controllers;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
 import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
-import fr.afpa.requiem_for_a_spring.dtos.InviteUserDto;
-import fr.afpa.requiem_for_a_spring.services.InvitMembreService;
 import fr.afpa.requiem_for_a_spring.services.InvitationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +23,10 @@ public class UserController {
 
     private UserService userService;
 
-    private final InvitMembreService invitMembreService;
-
     private final InvitationService invitationService;
 
-    public UserController(UserService userService, InvitMembreService invitMembreService, InvitationService invitationService) {
+    public UserController(UserService userService, InvitationService invitationService) {
         this.userService = userService;
-        this.invitMembreService = invitMembreService;
         this.invitationService = invitationService;
     }
 
