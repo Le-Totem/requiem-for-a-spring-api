@@ -2,6 +2,8 @@ CREATE TYPE mediatype AS ENUM ('PDF', 'IMAGE', 'MUSECORE', 'TUXGUITAR');
 
 CREATE TYPE user_role AS ENUM ('ADMIN', 'MODERATEUR', 'UTILISATEUR');
 
+CREATE TYPE invit_status AS ENUM ('PENDING', 'ACCEPTED', 'REFUSED');
+
 CREATE TABLE "user"(
    id UUID,
    firstname VARCHAR(50)  NOT NULL,
@@ -32,6 +34,17 @@ CREATE TABLE instrument(
    "name" VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id)
 );
+
+CREATE TABLE invitation(
+   id SERIAL,
+   email VARCHAR(50) NOT NULL,
+   "status" invit_status NOT NULL default 'PENDING',
+   created_at DATE NOT NULL,
+   id_group INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_group) REFERENCES "group"(id)
+);
+
 
 CREATE TABLE music_piece(
    id SERIAL,

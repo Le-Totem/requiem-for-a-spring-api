@@ -70,7 +70,6 @@ public class GroupController {
 
     /**
      * Requête pour créer un ensemble. ✅
-     * TODO: Passer le rôle en Admin lorsque l'utilisateur créé un groupe
      * 
      * @param groupDto
      * @return
