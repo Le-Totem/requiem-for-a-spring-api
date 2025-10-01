@@ -1,11 +1,14 @@
 package fr.afpa.requiem_for_a_spring.web.controllers;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
 import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
+import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
 import fr.afpa.requiem_for_a_spring.dtos.InviteUserDto;
 import fr.afpa.requiem_for_a_spring.services.InvitMembreService;
+import fr.afpa.requiem_for_a_spring.services.InvitationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +28,12 @@ public class UserController {
 
     private final InvitMembreService invitMembreService;
 
-    public UserController(UserService userService, InvitMembreService invitMembreService) {
+    private final InvitationService invitationService;
+
+    public UserController(UserService userService, InvitMembreService invitMembreService, InvitationService invitationService) {
         this.userService = userService;
         this.invitMembreService = invitMembreService;
+        this.invitationService = invitationService;
     }
 
     /**
@@ -91,20 +97,12 @@ public class UserController {
      * TODO: vérifier que l'utilisateur s'ajoute dans l'ensemble via la table
      * user_group
      */
-    @PostMapping("/invite")
+
+    @PostMapping("/invite_user")
     @RequireRole(role = Role.MODERATEUR)
-    public ResponseEntity<UserDto> inviteUser(@RequestBody InviteUserDto request) {
-        try {
-            UserDto invited = invitMembreService.inviteUserToGroup(
-                    request.getEmail(),
-                    request.getGroup(),
-                    request.getRole());
-            return new ResponseEntity<>(invited, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<InvitationDto> createInvitation(@RequestBody InvitationDto invitationDto) {
+        InvitationDto saved = invitationService.createInvitation(invitationDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     /**
