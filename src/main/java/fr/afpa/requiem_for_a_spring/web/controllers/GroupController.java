@@ -10,7 +10,6 @@ import fr.afpa.requiem_for_a_spring.services.GroupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
