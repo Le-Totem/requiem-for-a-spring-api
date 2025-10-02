@@ -49,8 +49,6 @@ public class SecurityConfig {
 
                         // Admin global
                         .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/media/validate/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/users/validate/**").hasRole("ADMIN")
 
                         // Bloquer GET /api/users/** pour les utilisateurs sauf modo et admin
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("MODERATEUR", "ADMIN")
