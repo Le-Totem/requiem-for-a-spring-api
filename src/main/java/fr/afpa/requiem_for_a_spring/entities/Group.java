@@ -23,14 +23,15 @@ public class Group {
     @Column(name = "is_everyone_admin", nullable = false)
     private Boolean isEveryoneAdmin = false;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", targetEntity = MusicPiece.class)
     private List<MusicPiece> musicPieces;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, targetEntity = Invitation.class)
     private List<Invitation> invitations;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<UserGroup>  userGroups;
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, targetEntity = UserGroup.class)
+    private List<UserGroup> userGroups;
+
     public Group() {
 
     }

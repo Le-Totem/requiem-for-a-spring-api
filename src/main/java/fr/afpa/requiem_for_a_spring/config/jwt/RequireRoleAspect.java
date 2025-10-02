@@ -6,6 +6,7 @@ import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -48,11 +49,17 @@ public class RequireRoleAspect {
             throw new IllegalStateException("Type de principal inattendu : " + principal.getClass());
         }
 
+        // Récupérer les noms des paramètres
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        String[] paramNames = signature.getParameterNames();
+        Object[] args = joinPoint.getArgs();
+
         // Vérifie si la méthode a un paramètre id_group
         Integer id_group = null;
-        for (Object arg : joinPoint.getArgs()) {
-            if (arg instanceof Integer) {
-                id_group = (Integer) arg;
+
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] instanceof Integer && "id_group".equals(paramNames[i])) {
+                id_group = (Integer) args[i];
                 break;
             }
         }
@@ -67,7 +74,12 @@ public class RequireRoleAspect {
         } else {
             // Vérification globale (par exemple ADMIN global, MODO global, etc.)
             boolean hasRequiredRole = user.getUserGroups().stream()
-                    .anyMatch(userGroup -> permissionService.hasAtLeastRole(userGroup.getRole(), requiredRole));
+                    .anyMatch(userGroup -> {
+                        Role role = userGroup.getRole();
+                        return role == requiredRole
+                                || (requiredRole == Role.MODERATEUR && role == Role.ADMIN)
+                                || (requiredRole == Role.UTILISATEUR);
+                    });
 
             if (!hasRequiredRole) {
                 throw new ResponseStatusException(FORBIDDEN,
