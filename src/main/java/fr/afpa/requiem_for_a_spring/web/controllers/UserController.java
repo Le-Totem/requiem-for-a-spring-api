@@ -108,7 +108,7 @@ public class UserController {
      * @return Un utilisateur mis à jour
      */
     @PatchMapping("/group/{id_group}/user/{id_user}")
-    @RequireRole(role = Role.MODERATEUR)
+    @RequireRole(role = Role.ADMIN)
     public ResponseEntity<UserDto> updateRoleUser(@PathVariable Integer id_group, @PathVariable UUID id_user,
             @RequestBody UserRoleDto userRoleDto) {
         try {
