@@ -2,6 +2,7 @@ package fr.afpa.requiem_for_a_spring;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -154,6 +155,33 @@ public class GroupControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(3))
                 .andExpect(jsonPath("$.name").value("Nouvelle Chorale"));
+    }
+
+    @Test
+    public void testCreateInvitation() throws Exception {
+        Integer id_group = 1;
+
+        String requestBody = """
+                {
+                  "email": "invitation@mail.com",
+                  "groupId": 1
+                }
+                """;
+
+        InvitationDto invitationDto = new InvitationDto();
+        invitationDto.setId(1);
+        invitationDto.setEmail("invitation@mail.com");
+        invitationDto.setGroupId(id_group);
+
+        when(invitationService.createInvitation(any(InvitationDto.class), eq(id_group))).thenReturn(invitationDto);
+
+        mockMvc.perform(post("/api/groups/" + id_group + "/invite_user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.email").value("invitation@mail.com"))
+                .andExpect(jsonPath("$.groupId").value(id_group));
     }
 
     @Test

@@ -102,17 +102,14 @@ public class GroupController {
     }
 
     /**
-     * Requête pour inviter un utilisateur dans un ensemble
-     * TODO: vérifier que l'utilisateur s'ajoute dans l'ensemble via la table
-     * user_group
+     * Requête pour inviter un utilisateur dans un ensemble ✅
      */
 
     @PostMapping("{id_group}/invite_user")
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<InvitationDto> createInvitation(
             @PathVariable Integer id_group,
-            @RequestBody InvitationDto invitationDto
-            ) {
+            @RequestBody InvitationDto invitationDto) {
         InvitationDto saved = invitationService.createInvitation(invitationDto, id_group);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }

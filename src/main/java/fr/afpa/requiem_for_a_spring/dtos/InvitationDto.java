@@ -2,10 +2,8 @@ package fr.afpa.requiem_for_a_spring.dtos;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.entities.Invitation;
 import fr.afpa.requiem_for_a_spring.enums.Status;
 

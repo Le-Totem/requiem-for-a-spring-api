@@ -23,7 +23,7 @@ import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
 import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.entities.Invitation;
 import fr.afpa.requiem_for_a_spring.enums.Status;
-import fr.afpa.requiem_for_a_spring.mailer.EmailService;
+import fr.afpa.requiem_for_a_spring.mailer.EmailServiceImpl;
 import fr.afpa.requiem_for_a_spring.mappers.InvitationMapper;
 import fr.afpa.requiem_for_a_spring.repositories.GroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.InvitationRepository;
@@ -36,8 +36,8 @@ public class InvitationServiceTest {
     @InjectMocks
     private InvitationService invitationService;
 
-    @InjectMocks
-    private EmailService emailService;
+    @Mock
+    private EmailServiceImpl emailService;
 
     @Mock
     private InvitationRepository invitationRepository;
@@ -88,21 +88,22 @@ public class InvitationServiceTest {
 
         InvitationDto invitationDto = new InvitationDto();
         invitationDto.setEmail("jean@mail.com");
-        invitationDto.setGroup(group);
+        invitationDto.setGroupId(group.getId());
 
         when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
         when(userRepository.findByEmail(invitationDto.getEmail())).thenReturn(Optional.empty());
-        when(invitationRepository.save(any(Invitation.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(invitationRepository.save(any(Invitation.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        InvitationDto result = invitationService.createInvitation(invitationDto);
+        InvitationDto result = invitationService.createInvitation(invitationDto, group.getId());
 
         assertNotNull(result);
         assertEquals(invitationDto.getEmail(), result.getEmail());
         assertEquals(Status.PENDING, result.getStatus());
-        assertEquals(group.getId(), result.getGroup().getId());
+        assertEquals(group.getId(), result.getGroupId());
 
         verify(emailService).sendSimpleMessage(
-                eq("invite@mail.com"),
+                eq(invitationDto.getEmail()),
                 contains("Invitation à rejoindre la plateforme"),
                 anyString());
         verify(invitationRepository).save(any(Invitation.class));

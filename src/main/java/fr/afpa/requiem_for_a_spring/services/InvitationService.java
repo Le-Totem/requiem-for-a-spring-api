@@ -3,7 +3,6 @@ package fr.afpa.requiem_for_a_spring.services;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import fr.afpa.requiem_for_a_spring.entities.Group;
