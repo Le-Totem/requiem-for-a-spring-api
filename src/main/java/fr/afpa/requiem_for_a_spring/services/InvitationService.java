@@ -3,6 +3,7 @@ package fr.afpa.requiem_for_a_spring.services;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import fr.afpa.requiem_for_a_spring.entities.Group;
@@ -47,9 +48,9 @@ public class InvitationService {
                 .collect(Collectors.toList());
     }
 
-    public InvitationDto createInvitation(InvitationDto dto) {
-        Group group = groupRepository.findById(dto.getGroup().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Groupe introuvable avec id=" + dto.getGroup().getId()));
+    public InvitationDto createInvitation(InvitationDto dto, Integer id_group) {
+        Group group = groupRepository.findById(id_group)
+                .orElseThrow(() -> new EntityNotFoundException("Groupe introuvable avec id=" + dto.getGroupId()));
 
         // Vérifie si l'utilisateur invité existe déjà
         Optional<User> invitedUser = userRepository.findByEmail(dto.getEmail());
@@ -74,6 +75,7 @@ public class InvitationService {
         invitation.setGroup(group);
         invitation.setStatus(Status.PENDING);
         invitation.setCreated_at(new Date());
+        invitation.setGroup(group);
 
         invitationRepository.save(invitation);
 

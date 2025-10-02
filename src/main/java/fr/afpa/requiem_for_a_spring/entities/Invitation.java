@@ -4,15 +4,10 @@ import java.util.Date;
 
 import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
 import fr.afpa.requiem_for_a_spring.enums.Status;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.Type;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 @Entity
 @Table(name = "invitation")
@@ -25,7 +20,9 @@ public class Invitation {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, columnDefinition = "invit_status")
+    @JdbcType(PostgreSQLEnumJdbcType.class)// Type Hibernate pour PostgreSQL enum
     private Status status;
 
     @Column(name = "created_at")
@@ -44,7 +41,6 @@ public class Invitation {
         this.email = invitationDto.getEmail();
         this.status = invitationDto.getStatus();
         this.created_at = invitationDto.getCreated_at();
-        this.group = invitationDto.getGroup();
     }
 
     public Integer getId() {
