@@ -86,18 +86,6 @@ public class UserController {
         }
     }
 
-    /**
-     * Requête pour inviter un utilisateur dans un ensemble
-     * TODO: vérifier que l'utilisateur s'ajoute dans l'ensemble via la table
-     * user_group
-     */
-
-    @PostMapping("/invite_user")
-    @RequireRole(role = Role.MODERATEUR)
-    public ResponseEntity<InvitationDto> createInvitation(@RequestBody InvitationDto invitationDto) {
-        InvitationDto saved = invitationService.createInvitation(invitationDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
-    }
 
     /**
      * Requête pour modifier le rôle d'un utilisateur dans un ensemble ✅

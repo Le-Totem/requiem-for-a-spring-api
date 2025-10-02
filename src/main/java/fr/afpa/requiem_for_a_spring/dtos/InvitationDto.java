@@ -17,8 +17,9 @@ public class InvitationDto {
     private Status status;
     @JsonProperty("created_at")
     private Date created_at;
-    @JsonIgnore
-    private Group group;
+
+    @JsonProperty("groupId")
+    private Integer groupId;
 
     public InvitationDto() {
 
@@ -29,7 +30,7 @@ public class InvitationDto {
         this.email = invitation.getEmail();
         this.status = invitation.getStatus();
         this.created_at = invitation.getCreated_at();
-        this.group = invitation.getGroup();
+        this.groupId = invitation.getGroup().getId();
     }
 
     public Integer getId() {
@@ -64,12 +65,11 @@ public class InvitationDto {
         this.created_at = created_at;
     }
 
-    public Group getGroup() {
-        return group;
+    public Integer getGroupId() {
+        return groupId;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
-
 }
