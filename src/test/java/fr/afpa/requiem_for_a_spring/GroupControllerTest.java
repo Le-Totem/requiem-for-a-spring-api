@@ -14,6 +14,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -21,13 +22,18 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import fr.afpa.requiem_for_a_spring.config.SecurityConfigForTest;
+import fr.afpa.requiem_for_a_spring.config.jwt.JwtService;
 import fr.afpa.requiem_for_a_spring.dtos.GroupDto;
+import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
 import fr.afpa.requiem_for_a_spring.services.GroupService;
+import fr.afpa.requiem_for_a_spring.services.InvitationService;
+import fr.afpa.requiem_for_a_spring.web.controllers.GroupController;
 
-@WebMvcTest(fr.afpa.requiem_for_a_spring.web.controllers.GroupController.class)
+@WebMvcTest(GroupController.class)
 @Import(SecurityConfigForTest.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class GroupControllerTest {
 
     @Autowired
@@ -38,6 +44,12 @@ public class GroupControllerTest {
 
     @MockitoBean
     private MusicPieceRepository musicPieceRepository;
+
+    @MockitoBean
+    private InvitationService invitationService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @Test
     public void getAllGroups() throws Exception {
@@ -93,6 +105,30 @@ public class GroupControllerTest {
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].title").value("Requiem"))
                 .andExpect(jsonPath("$[1].title").value("Ave Maria"));
+    }
+
+    @Test
+    public void testGetInvitations() throws Exception {
+        Integer id_group = 1;
+
+        InvitationDto invitation1 = new InvitationDto();
+        invitation1.setId(1);
+        invitation1.setEmail("jean@mail.com");
+
+        InvitationDto invitation2 = new InvitationDto();
+        invitation2.setId(2);
+        invitation2.setEmail("nina@mail.com");
+
+        List<InvitationDto> invitations = Arrays.asList(invitation1, invitation2);
+
+        when(invitationService.getAllInvitations(id_group)).thenReturn(invitations);
+
+        mockMvc.perform(get("/api/groups/" + id_group + "/invitations")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].email").value("jean@mail.com"))
+                .andExpect(jsonPath("$[1].email").value("nina@mail.com"));
     }
 
     @Test

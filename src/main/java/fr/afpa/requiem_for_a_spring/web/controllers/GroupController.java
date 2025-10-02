@@ -77,7 +77,7 @@ public class GroupController {
     }
 
     /**
-     * Requête pour récupérer les invitations d'un ensemble
+     * Requête pour récupérer les invitations d'un ensemble ✅
      * 
      * @param id
      * @return
