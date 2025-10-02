@@ -29,6 +29,8 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<Invitation> invitations;
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    private List<UserGroup>  userGroups;
     public Group() {
 
     }
@@ -82,4 +84,27 @@ public class Group {
         this.musicPieces = musicPieces;
     }
 
+    public Boolean getEveryoneAdmin() {
+        return isEveryoneAdmin;
+    }
+
+    public void setEveryoneAdmin(Boolean everyoneAdmin) {
+        isEveryoneAdmin = everyoneAdmin;
+    }
+
+    public List<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(List<Invitation> invitations) {
+        this.invitations = invitations;
+    }
+
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
+    }
+
+    public void setUserGroups(List<UserGroup> userGroups) {
+        this.userGroups = userGroups;
+    }
 }
