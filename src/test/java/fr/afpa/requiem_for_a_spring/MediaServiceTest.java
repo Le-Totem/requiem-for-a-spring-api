@@ -73,6 +73,27 @@ public class MediaServiceTest {
     }
 
     @Test
+    public void testFindMediasByMusicPieceId() {
+        Media media = new Media();
+        media.setId(1);
+        media.setTitle("Partition piano");
+
+        MusicPiece musicPiece = new MusicPiece();
+        musicPiece.setId(1);
+
+        List<Media> medias = Arrays.asList(media);
+
+        when(mediaRepository.findByIdTrack_Id(musicPiece.getId())).thenReturn(medias);
+
+        List<MediaDto> result = mediaService.getMediasByIdMusicPiece(musicPiece.getId());
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        verify(mediaRepository).findByIdTrack_Id(musicPiece.getId());
+    }
+
+    @Test
     @Transactional
     public void testCreateMedia() {
         // Arrange

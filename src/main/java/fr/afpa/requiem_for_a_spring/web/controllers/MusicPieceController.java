@@ -17,14 +17,12 @@ import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.GenreDto;
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
-import fr.afpa.requiem_for_a_spring.entities.Media;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.GenreService;
 import fr.afpa.requiem_for_a_spring.services.MediaService;
 import fr.afpa.requiem_for_a_spring.services.MusicPieceService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/tracks")

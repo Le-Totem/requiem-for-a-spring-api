@@ -17,23 +17,28 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import fr.afpa.requiem_for_a_spring.config.SecurityConfigForTest;
+import fr.afpa.requiem_for_a_spring.config.jwt.JwtService;
 import fr.afpa.requiem_for_a_spring.dtos.GenreDto;
+import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
 import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
 import fr.afpa.requiem_for_a_spring.services.GenreService;
+import fr.afpa.requiem_for_a_spring.services.MediaService;
 import fr.afpa.requiem_for_a_spring.services.MusicPieceService;
 import fr.afpa.requiem_for_a_spring.web.controllers.MusicPieceController;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebMvcTest(MusicPieceController.class)
 @Import(SecurityConfigForTest.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class MusicPieceControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -43,6 +48,12 @@ public class MusicPieceControllerTest {
 
     @MockitoBean
     private GenreService genreService;
+
+    @MockitoBean
+    private MediaService mediaService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @Test
     public void testGetAll() throws Exception {
@@ -128,6 +139,26 @@ public class MusicPieceControllerTest {
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].name").value("Rap"))
                 .andExpect(jsonPath("$[1].name").value("Pop"));
+    }
+
+    @Test
+    public void testGetMediasByIdMusicPiece() throws Exception {
+        MediaDto media = new MediaDto();
+        media.setId(1);
+        media.setTitle("Partition piano");
+
+        MusicPiece musicPiece = new MusicPiece();
+        musicPiece.setId(1);
+
+        List<MediaDto> medias = Arrays.asList(media);
+
+        when(mediaService.getMediasByIdMusicPiece(musicPiece.getId())).thenReturn(medias);
+
+        mockMvc.perform(get("/api/tracks/" + musicPiece.getId() + "/medias")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].title").value("Partition piano"));
     }
 
     @Test

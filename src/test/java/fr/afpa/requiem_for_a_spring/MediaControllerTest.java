@@ -48,7 +48,7 @@ public class MediaControllerTest {
         when(mediaService.getAll()).thenReturn(mediaList);
 
         mockMvc.perform(get("/api/media")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].title").value("Audio 1"))
@@ -64,7 +64,7 @@ public class MediaControllerTest {
         when(mediaService.getById(1)).thenReturn(media);
 
         mockMvc.perform(get("/api/media/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.title").value("Audio 1"));
@@ -88,8 +88,8 @@ public class MediaControllerTest {
                 """;
 
         mockMvc.perform(post("/api/media")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(3))
                 .andExpect(jsonPath("$.title").value("Audio 2"));
