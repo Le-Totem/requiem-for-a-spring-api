@@ -4,6 +4,7 @@ import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.GroupDto;
 import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
+import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
@@ -41,6 +42,17 @@ public class GroupController {
     public ResponseEntity<List<GroupDto>> getAll() {
         List<GroupDto> groups = groupService.findAll();
         return ResponseEntity.ok(groups);
+    }
+
+    /**
+     * Requête pour récupérer les ensembles de l'utilisateur connecté. ✅
+     *
+     * @return
+     */
+    @GetMapping("/my-groups")
+    public ResponseEntity<List<UserRoleDto>> getMyGroups() {
+        List<UserRoleDto> myGroups = groupService.findMyGroups();
+        return ResponseEntity.ok(myGroups);
     }
 
     /**

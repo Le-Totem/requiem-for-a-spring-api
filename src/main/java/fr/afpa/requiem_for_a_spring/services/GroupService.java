@@ -1,6 +1,7 @@
 package fr.afpa.requiem_for_a_spring.services;
 
 import fr.afpa.requiem_for_a_spring.dtos.GroupDto;
+import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.Group;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.entities.UserGroup;
@@ -42,6 +43,25 @@ public class GroupService {
                 .map(groupMapper::convertToDto)
                 .orElse(null);
     }
+
+    public List<UserRoleDto> findMyGroups() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+
+        List<UserGroup> userGroups = userGroupRepository.findByUser_Id(currentUser.getId());
+
+        return userGroups.stream()
+                .map(ug -> {
+                    UserRoleDto dto = new UserRoleDto();
+                    dto.setId_user(currentUser.getId());
+                    dto.setId_group(ug.getGroup().getId());
+                    dto.setRole(ug.getRole());
+                    dto.setGroup(groupMapper.convertToDto(ug.getGroup()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
 
     public GroupDto save(GroupDto dto) {
         // Récupère l'utilisateur courant depuis le SecurityContext

@@ -11,6 +11,7 @@ public class UserRoleDto {
     private UUID id_user;
     private Integer id_group;
     private Role role;
+    private GroupDto group;
 
     public UserRoleDto() {
 
@@ -40,4 +41,11 @@ public class UserRoleDto {
         this.role = role;
     }
 
+    public GroupDto getGroup() {
+        return group;
+    }
+
+    public void setGroup(GroupDto group) {
+        this.group = group;
+    }
 }
