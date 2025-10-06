@@ -22,9 +22,9 @@ public class MediaService {
     private final UserRepository userRepository;
 
     public MediaService(MediaRepository mediaRepository,
-                        InstrumentRepository instrumentRepository,
-                        MusicPieceRepository musicPieceRepository,
-                        UserRepository userRepository) {
+            InstrumentRepository instrumentRepository,
+            MusicPieceRepository musicPieceRepository,
+            UserRepository userRepository) {
         this.mediaRepository = mediaRepository;
         this.instrumentRepository = instrumentRepository;
         this.musicPieceRepository = musicPieceRepository;
@@ -43,6 +43,11 @@ public class MediaService {
         return mediaRepository.findById(id)
                 .map(MediaDto::new)
                 .orElse(null);
+    }
+
+    // Récupérer tous les médias d'une fiche morceau
+    public List<MediaDto> getMediasByIdMusicPiece(Integer id) {
+        return mediaRepository.findByIdTrack_Id(id).stream().map(MediaDto::new).collect(Collectors.toList());
     }
 
     // Créer un média et associer instruments, track et user

@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.GenreDto;
+import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
 import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
+import fr.afpa.requiem_for_a_spring.entities.Media;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.GenreService;
+import fr.afpa.requiem_for_a_spring.services.MediaService;
 import fr.afpa.requiem_for_a_spring.services.MusicPieceService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/tracks")
@@ -28,11 +32,14 @@ public class MusicPieceController {
 
     private final MusicPieceService musicPieceService;
     private final GenreService genreService;
+    private final MediaService mediaService;
 
     // constructeur
-    public MusicPieceController(MusicPieceService musicPieceService, GenreService genreService) {
+    public MusicPieceController(MusicPieceService musicPieceService, GenreService genreService,
+            MediaService mediaService) {
         this.musicPieceService = musicPieceService;
         this.genreService = genreService;
+        this.mediaService = mediaService;
     }
 
     /**
@@ -75,6 +82,17 @@ public class MusicPieceController {
     @GetMapping("/{id}/all-genres")
     public ResponseEntity<List<GenreDto>> getAllGenres(@PathVariable Integer id) {
         return new ResponseEntity<>(genreService.getAllGenresByIdMusicPiece(id), HttpStatus.OK);
+    }
+
+    /**
+     * Requête pour récupérer tous les médias d'une fiche morceau ✅
+     * 
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/medias")
+    public ResponseEntity<List<MediaDto>> getAllMedias(@PathVariable Integer id) {
+        return new ResponseEntity<>(mediaService.getMediasByIdMusicPiece(id), HttpStatus.OK);
     }
 
     /**
