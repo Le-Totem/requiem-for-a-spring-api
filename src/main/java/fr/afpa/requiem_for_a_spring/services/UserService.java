@@ -24,7 +24,8 @@ public class UserService {
     private UserMapper userMapper;
     private UserGroupRepository userGroupRepository;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, UserGroupRepository userGroupRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper,
+            UserGroupRepository userGroupRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.userGroupRepository = userGroupRepository;

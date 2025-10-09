@@ -2,14 +2,18 @@ package fr.afpa.requiem_for_a_spring.web.controllers;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
+import fr.afpa.requiem_for_a_spring.dtos.UserInfoDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
+import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -59,6 +63,31 @@ public class UserController {
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<List<UserDto>> getAllUsersByIdGroup(@PathVariable Integer id) {
         return new ResponseEntity<>(userService.getAllUsersByIdGroup(id), HttpStatus.OK);
+    }
+
+    /**
+     * Récupère les infos de l'utilisateur (notamment les rôles) pour le front
+     * 
+     * @param user
+     * @return
+     */
+    @GetMapping("/me")
+    public ResponseEntity<UserInfoDto> getCurrentUser(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        UserInfoDto userInfo = new UserInfoDto(
+                user.getId(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
+                user.getUserGroups()
+                        .stream()
+                        .map(ug -> ug.getRole().name())
+                        .collect(Collectors.toList()));
+
+        return ResponseEntity.ok(userInfo);
     }
 
     /**
