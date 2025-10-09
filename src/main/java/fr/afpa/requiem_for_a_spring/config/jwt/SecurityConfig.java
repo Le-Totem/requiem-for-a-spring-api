@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
 
                         // Bloquer GET /api/users/** pour les utilisateurs sauf modo et admin
+                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("UTILISATEUR")
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("MODERATEUR", "ADMIN")
 
                         // Modérateur / Admin global pour le reste des endpoints API

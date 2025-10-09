@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
+import fr.afpa.requiem_for_a_spring.dtos.UserGroupRoleDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserInfoDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
@@ -84,7 +85,7 @@ public class UserController {
                 user.getEmail(),
                 user.getUserGroups()
                         .stream()
-                        .map(ug -> ug.getRole().name())
+                        .map(ug -> new UserGroupRoleDto(ug.getId().getId_group(), ug.getRole()))
                         .collect(Collectors.toList()));
 
         return ResponseEntity.ok(userInfo);
