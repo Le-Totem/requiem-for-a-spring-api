@@ -52,7 +52,7 @@ public class MediaService {
 
     // Créer un média et associer instruments, track et user
     @Transactional
-    public MediaDto createMedia(MediaDto dto) {
+    public MediaDto createMedia(Integer idTrack, MediaDto dto, User user) {
         Media media = new Media();
         media.setType(dto.getType());
         media.setTitle(dto.getTitle());
@@ -61,13 +61,11 @@ public class MediaService {
         media.setDateModified(dto.getDateModified());
 
         // Lier la piste
-        MusicPiece track = musicPieceRepository.findById(dto.getTrackId())
-                .orElseThrow(() -> new RuntimeException("Track non trouvé : id=" + dto.getTrackId()));
+        MusicPiece track = musicPieceRepository.findById(idTrack)
+                .orElseThrow(() -> new RuntimeException("Track non trouvé : id=" + idTrack));
         media.setIdTrack(track);
 
         // Lier l’utilisateur
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User non trouvé : id=" + dto.getUserId()));
         media.setIdUser(user);
 
         // Sauvegarder le média pour générer l’ID

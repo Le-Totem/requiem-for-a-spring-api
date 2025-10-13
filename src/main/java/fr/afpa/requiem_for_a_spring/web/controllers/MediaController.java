@@ -2,9 +2,11 @@ package fr.afpa.requiem_for_a_spring.web.controllers;
 
 import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
+import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.MediaService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,16 +51,23 @@ public class MediaController {
      *
      * @return
      */
-    @PostMapping
+    @PostMapping("/{idTrack}")
     @RequireRole(role = Role.MODERATEUR)
-    public ResponseEntity<MediaDto> createMedia(@RequestBody MediaDto dto) {
+    public ResponseEntity<MediaDto> createMedia(
+            @PathVariable Integer idTrack,
+            @RequestBody MediaDto dto,
+    Authentication authentication) {
         try {
-            MediaDto created = mediaService.createMedia(dto);
+            User user = (User) authentication.getPrincipal();
+            MediaDto created = mediaService.createMedia(idTrack, dto, user);
             return ResponseEntity.ok(created);
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
+
     }
+
 
     /**
      * Requête pour supprimer un media. ✅

@@ -13,10 +13,7 @@ public class MediaDto {
     private Integer id;
     private MediaType type;
     private String url;
-    private LocalDate dateAdded;
     private LocalDate dateModified;
-    private Integer trackId;
-    private UUID userId;
     private Set<Integer> instrumentIds;
 
     public MediaDto() {}
@@ -26,10 +23,7 @@ public class MediaDto {
         this.type = media.getType();
         this.title = media.getTitle();
         this.url = media.getUrl();
-        this.dateAdded = media.getDateAdded();
         this.dateModified = media.getDateModified();
-        this.trackId = media.getIdTrack() != null ? media.getIdTrack().getId() : null;
-        this.userId = media.getIdUser() != null ? UUID.fromString(media.getIdUser().getId().toString()) : null;
 
         this.instrumentIds = media.getMediaInstruments().stream()
                 .map(mi -> mi.getInstrument().getId())
@@ -68,13 +62,6 @@ public class MediaDto {
         this.url = url;
     }
 
-    public LocalDate getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(LocalDate dateAdded) {
-        this.dateAdded = dateAdded;
-    }
 
     public LocalDate getDateModified() {
         return dateModified;
@@ -82,22 +69,6 @@ public class MediaDto {
 
     public void setDateModified(LocalDate dateModified) {
         this.dateModified = dateModified;
-    }
-
-    public Integer getTrackId() {
-        return trackId;
-    }
-
-    public void setTrackId(Integer trackId) {
-        this.trackId = trackId;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
     }
 
     public Set<Integer> getInstrumentIds() {

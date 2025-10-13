@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -124,6 +126,22 @@ public class GroupController {
             @RequestBody InvitationDto invitationDto) {
         InvitationDto saved = invitationService.createInvitation(invitationDto, id_group);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
+    /**
+     * Requête pour mettre a jour un ensemble. ✅
+     *
+     * @param id
+     * @return
+     */
+    @PutMapping("/{id}/update")
+    @RequireRole(role = Role.ADMIN)
+    public GroupDto updateGroup(@PathVariable Integer id, @RequestBody Map<String, String> payload) {
+        String newName = payload.get("name");
+        if (newName == null || newName.isEmpty()) {
+            throw new IllegalArgumentException("Le nom du groupe est requis");
+        }
+        return groupService.update(id, newName);
     }
 
     /**
