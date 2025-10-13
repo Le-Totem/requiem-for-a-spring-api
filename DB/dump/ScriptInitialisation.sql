@@ -6,9 +6,9 @@ CREATE TYPE invit_status AS ENUM ('PENDING', 'ACCEPTED', 'REFUSED');
 
 CREATE TABLE "user"(
    id UUID,
-   firstname VARCHAR(50)  NOT NULL,
-   lastname VARCHAR(50)  NOT NULL,
-   email VARCHAR(50) UNIQUE NOT NULL,
+   firstname VARCHAR(250)  NOT NULL,
+   lastname VARCHAR(250)  NOT NULL,
+   email VARCHAR(250) UNIQUE NOT NULL,
    "password" VARCHAR(255)  NOT NULL,
    is_validated BOOLEAN NOT NULL,
    picture VARCHAR(150) ,

@@ -98,6 +98,7 @@ public class UserController {
      * @param userDto L'utilisateur à modifier
      * @return L'utilisateur modifié
      */
+    @SuppressWarnings("null")
     @PatchMapping("/{id}")
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<UserDto> updateUser(@PathVariable UUID id,
@@ -119,6 +120,7 @@ public class UserController {
      * @param userRoleDto
      * @return Un utilisateur mis à jour
      */
+    @SuppressWarnings("null")
     @PatchMapping("/group/{id_group}/user/{id_user}")
     @RequireRole(role = Role.ADMIN)
     public ResponseEntity<UserDto> updateRoleUser(@PathVariable Integer id_group, @PathVariable UUID id_user,
