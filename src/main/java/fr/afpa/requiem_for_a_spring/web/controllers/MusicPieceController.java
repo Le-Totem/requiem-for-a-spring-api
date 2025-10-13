@@ -94,15 +94,17 @@ public class MusicPieceController {
     }
 
     /**
-     * Requête pour créer une fiche morceau ✅
+     * Requête pour créer une fiche morceau
      * 
+     * @param id            L'identifiant de l'ensemble
      * @param musicPieceDto
      * @return
      */
-    @PostMapping
+    @PostMapping("/{id}/create")
     @RequireRole(role = Role.MODERATEUR)
-    public ResponseEntity<MusicPieceDto> createMusicPiece(@RequestBody MusicPieceDto musicPieceDto) {
-        return new ResponseEntity<>(musicPieceService.createMusicPiece(musicPieceDto), HttpStatus.CREATED);
+    public ResponseEntity<MusicPieceDto> createMusicPiece(@PathVariable Integer id,
+            @RequestBody MusicPieceDto musicPieceDto) {
+        return new ResponseEntity<>(musicPieceService.createMusicPiece(id, musicPieceDto), HttpStatus.CREATED);
     }
 
     /**
@@ -160,5 +162,6 @@ public class MusicPieceController {
     @RequireRole(role = Role.ADMIN)
     public void removeMusicPiece(@PathVariable Integer id, HttpServletResponse response) {
         musicPieceService.removeMusicPiece(id, response);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }

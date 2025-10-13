@@ -99,6 +99,9 @@ public class MusicPieceServiceTest {
 
     @Test
     public void testCreateMusicPiece() {
+        Group group = new Group();
+        group.setId(5);
+
         MusicPiece originalMusicPiece = new MusicPiece();
         originalMusicPiece.setId(1);
         originalMusicPiece.setTitle("Bella Ciao");
@@ -110,16 +113,19 @@ public class MusicPieceServiceTest {
         MusicPiece savedMusicPiece = new MusicPiece();
         savedMusicPiece.setId(1);
         savedMusicPiece.setTitle("Bella Ciao");
+        savedMusicPiece.setGroup(group);
 
+        Mockito.when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
         Mockito.when(musicPieceMapper.convertToEntity(musicPieceDto)).thenReturn(originalMusicPiece);
         Mockito.when(musicPieceRepository.save(originalMusicPiece)).thenReturn(savedMusicPiece);
 
-        MusicPieceDto result = musicPieceService.createMusicPiece(musicPieceDto);
+        MusicPieceDto result = musicPieceService.createMusicPiece(group.getId(), musicPieceDto);
 
         assertNotNull(result.getId());
         assertEquals(1, result.getId());
         assertEquals("Bella Ciao", result.getTitle());
 
+        Mockito.verify(groupRepository).findById(group.getId());
         Mockito.verify(musicPieceMapper).convertToEntity(musicPieceDto);
         Mockito.verify(musicPieceRepository).save(originalMusicPiece);
     }
