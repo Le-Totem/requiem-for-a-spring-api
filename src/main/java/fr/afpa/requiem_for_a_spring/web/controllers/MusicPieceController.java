@@ -160,5 +160,6 @@ public class MusicPieceController {
     @RequireRole(role = Role.ADMIN)
     public void removeMusicPiece(@PathVariable Integer id, HttpServletResponse response) {
         musicPieceService.removeMusicPiece(id, response);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }
