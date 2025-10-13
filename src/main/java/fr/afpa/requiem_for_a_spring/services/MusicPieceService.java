@@ -72,8 +72,12 @@ public class MusicPieceService {
      * @param musicPieceDto
      * @return
      */
-    public MusicPieceDto createMusicPiece(MusicPieceDto musicPieceDto) {
+    public MusicPieceDto createMusicPiece(Integer id, MusicPieceDto musicPieceDto) {
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Le groupe avec l'id " + id + " est introuvable."));
+
         MusicPiece musicPiece = musicPieceMapper.convertToEntity(musicPieceDto);
+        musicPiece.setGroup(group);
         musicPiece = musicPieceRepository.save(musicPiece);
         musicPieceDto.setId(musicPiece.getId());
         return musicPieceDto;
