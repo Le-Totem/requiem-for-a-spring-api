@@ -15,6 +15,8 @@ public class MediaDto {
     private String url;
     private LocalDate dateModified;
     private Set<Integer> instrumentIds;
+    private Integer trackId;
+
 
     public MediaDto() {}
 
@@ -25,6 +27,7 @@ public class MediaDto {
         this.url = media.getUrl();
         this.dateModified = media.getDateModified();
 
+        this.trackId = media.getIdTrack() != null ? media.getIdTrack().getId() : null;
         this.instrumentIds = media.getMediaInstruments().stream()
                 .map(mi -> mi.getInstrument().getId())
                 .collect(Collectors.toSet());
@@ -77,5 +80,13 @@ public class MediaDto {
 
     public void setInstrumentIds(Set<Integer> instrumentIds) {
         this.instrumentIds = instrumentIds;
+    }
+
+    public Integer getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(Integer trackId) {
+        this.trackId = trackId;
     }
 }

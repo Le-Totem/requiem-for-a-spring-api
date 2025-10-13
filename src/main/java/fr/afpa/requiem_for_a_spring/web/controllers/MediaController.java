@@ -68,6 +68,21 @@ public class MediaController {
 
     }
 
+    @PutMapping("/{id}")
+    @RequireRole(role = Role.MODERATEUR)
+    public ResponseEntity<MediaDto> updateMedia(@PathVariable Integer id,
+                                                @RequestBody MediaDto dto,
+                                                Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        try {
+            MediaDto updated = mediaService.updateMedia(id, dto, user);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
     /**
      * Requête pour supprimer un media. ✅
      *
