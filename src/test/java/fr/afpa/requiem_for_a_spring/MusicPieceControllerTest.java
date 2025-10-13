@@ -163,16 +163,18 @@ public class MusicPieceControllerTest {
 
     @Test
     public void testCreateMusicPiece() throws Exception {
+        Integer id_group = 5;
+
         MusicPieceDto musicPieceDto = new MusicPieceDto();
         musicPieceDto.setId(1);
         musicPieceDto.setTitle("Bella Ciao");
         musicPieceDto.setAuthor("Money Heist");
         musicPieceDto.setDescription("Musique de La Casa De Papel");
 
-        when(musicPieceService.createMusicPiece(Mockito.any(MusicPieceDto.class)))
+        when(musicPieceService.createMusicPiece(eq(id_group), Mockito.any(MusicPieceDto.class)))
                 .thenReturn(musicPieceDto);
 
-        mockMvc.perform(post("/api/tracks")
+        mockMvc.perform(post("/api/tracks/" + id_group + "/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
