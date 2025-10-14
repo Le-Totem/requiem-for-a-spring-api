@@ -86,7 +86,6 @@ public class MediaController {
     }
 
 
-
     /**
      * Requête pour supprimer un media. ✅
      *

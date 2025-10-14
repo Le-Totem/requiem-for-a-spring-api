@@ -5,7 +5,6 @@ import fr.afpa.requiem_for_a_spring.entities.Media;
 import fr.afpa.requiem_for_a_spring.enums.MediaType;
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MediaDto {
