@@ -63,6 +63,8 @@ public class GroupService {
     }
 
 
+
+
     public GroupDto save(GroupDto dto) {
         // Récupère l'utilisateur courant depuis le SecurityContext
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

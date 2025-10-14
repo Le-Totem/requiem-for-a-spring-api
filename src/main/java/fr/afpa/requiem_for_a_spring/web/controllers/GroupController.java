@@ -1,11 +1,9 @@
 package fr.afpa.requiem_for_a_spring.web.controllers;
 
 import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
-import fr.afpa.requiem_for_a_spring.dtos.GroupDto;
-import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
-import fr.afpa.requiem_for_a_spring.dtos.MusicPieceDto;
-import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
+import fr.afpa.requiem_for_a_spring.dtos.*;
 import fr.afpa.requiem_for_a_spring.entities.MusicPiece;
+import fr.afpa.requiem_for_a_spring.entities.UserGroup;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
 import fr.afpa.requiem_for_a_spring.services.GroupService;

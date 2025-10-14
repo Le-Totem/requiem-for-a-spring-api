@@ -4,6 +4,7 @@ import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
+import fr.afpa.requiem_for_a_spring.services.MediaInstrumentService;
 import fr.afpa.requiem_for_a_spring.services.MediaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,9 +17,11 @@ import java.util.List;
 public class MediaController {
 
     private final MediaService mediaService;
+    private final MediaInstrumentService mediaInstrumentService;
 
-    public MediaController(MediaService mediaService) {
+    public MediaController(MediaService mediaService, MediaInstrumentService mediaInstrumentService) {
         this.mediaService = mediaService;
+        this.mediaInstrumentService = mediaInstrumentService;
     }
 
     /**
@@ -100,4 +103,48 @@ public class MediaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    //--------------------------------------InstrumentMedia---------------------------------------
+
+    // Ajouter un instrument à un média
+    @PostMapping("/{mediaId}/instruments/{instrumentId}")
+    @RequireRole(role = Role.MODERATEUR)
+    public ResponseEntity<Void> addInstrumentToMedia(@PathVariable Integer mediaId,
+                                                     @PathVariable Integer instrumentId) {
+        try {
+            mediaInstrumentService.addInstrumentToMedia(mediaId, instrumentId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // Supprimer un instrument d’un média
+    @DeleteMapping("/{mediaId}/instruments/{instrumentId}")
+    @RequireRole(role = Role.MODERATEUR)
+    public ResponseEntity<Void> removeInstrumentFromMedia(@PathVariable Integer mediaId,
+                                                          @PathVariable Integer instrumentId) {
+        try {
+            mediaInstrumentService.removeInstrumentFromMedia(mediaId, instrumentId);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // Modifier un instrument lié à un média (remplacer un instrument par un autre)
+    @PutMapping("/{mediaId}/instruments")
+    @RequireRole(role = Role.MODERATEUR)
+    public ResponseEntity<Void> updateInstrumentOfMedia(@PathVariable Integer mediaId,
+                                                        @RequestParam Integer oldInstrumentId,
+                                                        @RequestParam Integer newInstrumentId) {
+        try {
+            mediaInstrumentService.updateInstrumentOfMedia(mediaId, oldInstrumentId, newInstrumentId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
 }

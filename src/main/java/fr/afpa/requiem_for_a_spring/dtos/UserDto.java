@@ -3,6 +3,7 @@ package fr.afpa.requiem_for_a_spring.dtos;
 import java.util.List;
 import java.util.UUID;
 
+import fr.afpa.requiem_for_a_spring.enums.Role;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,6 +22,8 @@ public class UserDto {
     private String picture;
     @JsonIgnore
     private List<UserGroup> userGroups;
+
+    private Role role;
 
     public UserDto() {
 
@@ -101,4 +104,11 @@ public class UserDto {
         this.userGroups = userGroups;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

@@ -58,10 +58,19 @@ public class UserService {
      * @param id_group L'id de l'ensemble
      * @return Une liste de'utilisateurs
      */
-    public List<UserDto> getAllUsersByIdGroup(Integer id) {
-        return userRepository.findAllByUserGroups_Group_Id(id).stream().map(user -> new UserDto(user))
+    public List<UserDto> getAllUsersByIdGroup(Integer groupId) {
+        // Récupère toutes les relations user/group pour cet ensemble
+        List<UserGroup> userGroups = userGroupRepository.findByGroup_Id(groupId);
+
+        return userGroups.stream()
+                .map(ug -> {
+                    UserDto dto = new UserDto(ug.getUser()); // récupère les infos de l'utilisateur
+                    dto.setRole(ug.getRole());              // ajoute le rôle dans cet ensemble
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
+
 
     /**
      * Modifie un utilisateur
