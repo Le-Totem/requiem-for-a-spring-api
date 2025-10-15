@@ -10,12 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserGroupRoleDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserInfoDto;
 import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
+import fr.afpa.requiem_for_a_spring.services.InvitationService;
 import fr.afpa.requiem_for_a_spring.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,8 +27,10 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserController {
 
     private UserService userService;
+    private InvitationService invitationService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, InvitationService invitationService) {
+        this.invitationService = invitationService;
         this.userService = userService;
     }
 
@@ -131,6 +135,17 @@ public class UserController {
             // erreur 404
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+    }
+
+    /**
+     * Requête pour avoir toutes les invitation d'un utilisateur
+     * 
+     * @param email email de l'utilisateur connecté
+     * @return Un utilisateur mis à jour
+     */
+    @GetMapping("/email/{email}")
+    public List<InvitationDto> getInvitationsByEmail(@PathVariable String email) {
+        return invitationService.amIInvited(email);
     }
 
     /**

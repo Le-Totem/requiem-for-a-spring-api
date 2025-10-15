@@ -10,6 +10,7 @@ import fr.afpa.requiem_for_a_spring.entities.Invitation;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Status;
 import fr.afpa.requiem_for_a_spring.mailer.EmailServiceImpl;
+import fr.afpa.requiem_for_a_spring.mappers.InvitationMapper;
 import fr.afpa.requiem_for_a_spring.repositories.GroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,15 +24,18 @@ public class InvitationService {
     private InvitationRepository invitationRepository;
     private GroupRepository groupRepository;
     private UserRepository userRepository;
+    private InvitationMapper invitationMapper;
 
     private final EmailServiceImpl emailService;
 
+    
     public InvitationService(InvitationRepository invitationRepository, GroupRepository groupRepository,
-            UserRepository userRepository, EmailServiceImpl emailService) {
+            UserRepository userRepository, EmailServiceImpl emailService, InvitationMapper invitationMapper) {
         this.invitationRepository = invitationRepository;
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.invitationMapper = invitationMapper;
     }
 
     /**
@@ -47,6 +51,11 @@ public class InvitationService {
                 .collect(Collectors.toList());
     }
 
+    public List<InvitationDto> amIInvited(String email) {
+        List<Invitation> invitations = invitationRepository.findByEmail(email);
+        return invitationMapper.toDtoList(invitations);
+    }
+
     public InvitationDto createInvitation(InvitationDto dto, Integer id_group) {
         Group group = groupRepository.findById(id_group)
                 .orElseThrow(() -> new EntityNotFoundException("Groupe introuvable avec id=" + dto.getGroupId()));
@@ -59,14 +68,14 @@ public class InvitationService {
             emailService.sendSimpleMessage(
                     dto.getEmail(),
                     "Invitation à rejoindre le groupe " + group.getName(),
-                    "Bonjour, vous avez été invité à rejoindre le groupe '" + group.getName() + "'.");
+                    "Bonjour, vous avez été invité à rejoindre le groupe '" + group.getName()+ "' http://localhost:5173/ensemble/"+ group.getId() + " .");
         } else {
             // Utilisateur non inscrit
             emailService.sendSimpleMessage(
                     dto.getEmail(),
                     "Invitation à rejoindre la plateforme",
                     "Bonjour, vous avez été invité à rejoindre le groupe '" + group.getName()
-                            + "'. Veuillez créer un compte pour accepter l’invitation.");
+                            + "'. Veuillez créer un compte pour accepter l’invitation. \n Voici le liens pour vous inscrire: http://localhost:5173/" );
         }
 
         Invitation invitation = new Invitation();
