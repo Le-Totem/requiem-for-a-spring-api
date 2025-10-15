@@ -59,7 +59,7 @@ public class MediaController {
     public ResponseEntity<MediaDto> createMedia(
             @PathVariable Integer idTrack,
             @RequestBody MediaDto dto,
-    Authentication authentication) {
+            Authentication authentication) {
         try {
             User user = (User) authentication.getPrincipal();
             MediaDto created = mediaService.createMedia(idTrack, dto, user);
@@ -74,8 +74,8 @@ public class MediaController {
     @PutMapping("/{id}")
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<MediaDto> updateMedia(@PathVariable Integer id,
-                                                @RequestBody MediaDto dto,
-                                                Authentication authentication) {
+            @RequestBody MediaDto dto,
+            Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         try {
             MediaDto updated = mediaService.updateMedia(id, dto, user);
@@ -84,7 +84,6 @@ public class MediaController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
 
     /**
      * Requête pour supprimer un media. ✅
@@ -103,13 +102,13 @@ public class MediaController {
         }
     }
 
-    //--------------------------------------InstrumentMedia---------------------------------------
+    // --------------------------------------InstrumentMedia---------------------------------------
 
     // Ajouter un instrument à un média
     @PostMapping("/{mediaId}/instruments/{instrumentId}")
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<Void> addInstrumentToMedia(@PathVariable Integer mediaId,
-                                                     @PathVariable Integer instrumentId) {
+            @PathVariable Integer instrumentId) {
         try {
             mediaInstrumentService.addInstrumentToMedia(mediaId, instrumentId);
             return ResponseEntity.ok().build();
@@ -122,7 +121,7 @@ public class MediaController {
     @DeleteMapping("/{mediaId}/instruments/{instrumentId}")
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<Void> removeInstrumentFromMedia(@PathVariable Integer mediaId,
-                                                          @PathVariable Integer instrumentId) {
+            @PathVariable Integer instrumentId) {
         try {
             mediaInstrumentService.removeInstrumentFromMedia(mediaId, instrumentId);
             return ResponseEntity.noContent().build();
@@ -135,8 +134,8 @@ public class MediaController {
     @PutMapping("/{mediaId}/instruments")
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<Void> updateInstrumentOfMedia(@PathVariable Integer mediaId,
-                                                        @RequestParam Integer oldInstrumentId,
-                                                        @RequestParam Integer newInstrumentId) {
+            @RequestParam Integer oldInstrumentId,
+            @RequestParam Integer newInstrumentId) {
         try {
             mediaInstrumentService.updateInstrumentOfMedia(mediaId, oldInstrumentId, newInstrumentId);
             return ResponseEntity.ok().build();
@@ -144,6 +143,5 @@ public class MediaController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 
 }

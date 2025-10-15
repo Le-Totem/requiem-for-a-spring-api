@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class UserService {
     private UserRepository userRepository;
     private UserMapper userMapper;
     private UserGroupRepository userGroupRepository;
+    private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, UserMapper userMapper,
             UserGroupRepository userGroupRepository) {
@@ -109,6 +111,23 @@ public class UserService {
         }
 
         return userMapper.convertToDto(userRepository.save(user));
+    }
+
+    /**
+     * Endpoint pour réinitialiser le mot de passe d'un utilisateur.
+     * 
+     * ette méthode accepte une requête POST contenant l'email de l'utilisateur
+     * et le nouveau mot de passe. Elle permet de réinitialiser directement le mot
+     * de passe sans que l'utilisateur soit connecté.
+     *
+     * @param body Map contenant les champs "email" et "newPassword"
+     * @return ResponseEntity avec un message de succès ou d'erreur
+     */
+    public void resetPasswordByEmail(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(EntityNotFoundException::new);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     /**

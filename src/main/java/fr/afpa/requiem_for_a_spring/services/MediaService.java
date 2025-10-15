@@ -94,9 +94,12 @@ public class MediaService {
                 .orElseThrow(() -> new RuntimeException("Media non trouvé : id=" + id));
 
         // Mise à jour des champs simples
-        if (dto.getTitle() != null) existingMedia.setTitle(dto.getTitle());
-        if (dto.getUrl() != null) existingMedia.setUrl(dto.getUrl());
-        if (dto.getType() != null) existingMedia.setType(dto.getType());
+        if (dto.getTitle() != null)
+            existingMedia.setTitle(dto.getTitle());
+        if (dto.getUrl() != null)
+            existingMedia.setUrl(dto.getUrl());
+        if (dto.getType() != null)
+            existingMedia.setType(dto.getType());
         existingMedia.setDateModified(LocalDate.now());
 
         // Mise à jour du track (si fourni)
@@ -126,7 +129,6 @@ public class MediaService {
 
         return new MediaDto(updatedMedia);
     }
-
 
     // Supprimer un média
     @Transactional
