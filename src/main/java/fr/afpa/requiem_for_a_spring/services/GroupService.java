@@ -63,6 +63,8 @@ public class GroupService {
     }
 
 
+
+
     public GroupDto save(GroupDto dto) {
         // Récupère l'utilisateur courant depuis le SecurityContext
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -78,6 +80,17 @@ public class GroupService {
 
         return groupMapper.convertToDto(savedGroup);
     }
+    public GroupDto update(Integer groupId, String newName) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Groupe non trouvé"));
+
+        group.setName(newName);
+
+        Group updatedGroup = groupRepository.save(group);
+
+        return groupMapper.convertToDto(updatedGroup);
+    }
+
 
     public void deleteById(Integer id) {
         groupRepository.deleteById(id);

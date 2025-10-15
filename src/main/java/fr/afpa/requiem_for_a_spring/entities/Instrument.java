@@ -1,5 +1,6 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
+import fr.afpa.requiem_for_a_spring.dtos.InstrumentDto;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -18,6 +19,16 @@ public class Instrument {
 
     @OneToMany(mappedBy = "instrument", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MediaInstrument> mediaInstruments = new HashSet<>();
+
+    public Instrument(InstrumentDto dto) {
+        this.id = dto.getId();
+        this.name = dto.getName();
+        this.mediaInstruments = new HashSet<>();
+    }
+
+    public Instrument() {
+
+    }
 
     public Integer getId() {
         return id;

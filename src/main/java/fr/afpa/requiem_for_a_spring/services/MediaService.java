@@ -52,7 +52,7 @@ public class MediaService {
 
     // Créer un média et associer instruments, track et user
     @Transactional
-    public MediaDto createMedia(MediaDto dto) {
+    public MediaDto createMedia(Integer idTrack, MediaDto dto, User user) {
         Media media = new Media();
         media.setType(dto.getType());
         media.setTitle(dto.getTitle());
@@ -61,13 +61,11 @@ public class MediaService {
         media.setDateModified(dto.getDateModified());
 
         // Lier la piste
-        MusicPiece track = musicPieceRepository.findById(dto.getTrackId())
-                .orElseThrow(() -> new RuntimeException("Track non trouvé : id=" + dto.getTrackId()));
+        MusicPiece track = musicPieceRepository.findById(idTrack)
+                .orElseThrow(() -> new RuntimeException("Track non trouvé : id=" + idTrack));
         media.setIdTrack(track);
 
         // Lier l’utilisateur
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User non trouvé : id=" + dto.getUserId()));
         media.setIdUser(user);
 
         // Sauvegarder le média pour générer l’ID
@@ -83,10 +81,53 @@ public class MediaService {
                 savedMedia.getMediaInstruments().add(mi);
 
             }
-            savedMedia = mediaRepository.save(savedMedia); // persister la relation
+            savedMedia = mediaRepository.save(savedMedia);
         }
 
         return new MediaDto(savedMedia);
+    }
+
+    @Transactional
+    public MediaDto updateMedia(Integer id, MediaDto dto, User user) {
+        // Vérifier que le média existe
+        Media existingMedia = mediaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Media non trouvé : id=" + id));
+
+        // Mise à jour des champs simples
+        if (dto.getTitle() != null)
+            existingMedia.setTitle(dto.getTitle());
+        if (dto.getUrl() != null)
+            existingMedia.setUrl(dto.getUrl());
+        if (dto.getType() != null)
+            existingMedia.setType(dto.getType());
+        existingMedia.setDateModified(LocalDate.now());
+
+        // Mise à jour du track (si fourni)
+        if (dto.getTrackId() != null) {
+            MusicPiece track = musicPieceRepository.findById(dto.getTrackId())
+                    .orElseThrow(() -> new RuntimeException("Track non trouvé : id=" + dto.getTrackId()));
+            existingMedia.setIdTrack(track);
+        }
+
+        // Mise à jour des instruments associés
+        if (dto.getInstrumentIds() != null) {
+            // Supprimer les anciens liens
+            existingMedia.getMediaInstruments().clear();
+
+            // Ajouter les nouveaux
+            for (Integer instId : dto.getInstrumentIds()) {
+                Instrument instrument = instrumentRepository.findById(instId)
+                        .orElseThrow(() -> new RuntimeException("Instrument non trouvé : id=" + instId));
+
+                MediaInstrument mi = new MediaInstrument(existingMedia, instrument);
+                existingMedia.getMediaInstruments().add(mi);
+            }
+        }
+
+        // Sauvegarde
+        Media updatedMedia = mediaRepository.save(existingMedia);
+
+        return new MediaDto(updatedMedia);
     }
 
     // Supprimer un média
