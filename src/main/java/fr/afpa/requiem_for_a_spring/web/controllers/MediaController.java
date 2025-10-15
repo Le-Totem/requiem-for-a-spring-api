@@ -1,7 +1,6 @@
 package fr.afpa.requiem_for_a_spring.web.controllers;
 
 import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
-import fr.afpa.requiem_for_a_spring.dtos.InstrumentDto;
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
@@ -104,13 +103,6 @@ public class MediaController {
     }
 
     // --------------------------------------InstrumentMedia---------------------------------------
-
-    // Récupérer un instrument par ID Media
-    @GetMapping("/{mediaId}/instruments")
-    public ResponseEntity<List<InstrumentDto>> getInstrumentByIdMedia(@PathVariable Integer mediaId) {
-        List<InstrumentDto> instrumentList = mediaService.findAllByIdMedia(mediaId);
-        return ResponseEntity.ok(instrumentList);
-    }
 
     // Ajouter un instrument à un média
     @PostMapping("/{mediaId}/instruments/{instrumentId}")

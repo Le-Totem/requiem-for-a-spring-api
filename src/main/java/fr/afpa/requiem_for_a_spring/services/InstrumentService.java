@@ -4,6 +4,8 @@ import fr.afpa.requiem_for_a_spring.dtos.InstrumentDto;
 import fr.afpa.requiem_for_a_spring.entities.Instrument;
 import fr.afpa.requiem_for_a_spring.mappers.InstrumentMapper;
 import fr.afpa.requiem_for_a_spring.repositories.InstrumentRepository;
+import fr.afpa.requiem_for_a_spring.repositories.MediaInstrumentRepository;
+import fr.afpa.requiem_for_a_spring.repositories.MediaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +15,18 @@ import java.util.stream.Collectors;
 @Service
 public class InstrumentService {
 
+    private final MediaInstrumentRepository mediaInstrumentRepository;
+
     private final InstrumentRepository instrumentRepository;
     private final InstrumentMapper instrumentMapper;
+    private final MediaRepository mediaRepository;
 
-    public InstrumentService(InstrumentRepository instrumentRepository, InstrumentMapper instrumentMapper) {
+    public InstrumentService(InstrumentRepository instrumentRepository, InstrumentMapper instrumentMapper,
+            MediaRepository mediaRepository, MediaInstrumentRepository mediaInstrumentRepository) {
         this.instrumentRepository = instrumentRepository;
         this.instrumentMapper = instrumentMapper;
+        this.mediaRepository = mediaRepository;
+        this.mediaInstrumentRepository = mediaInstrumentRepository;
     }
 
     // Récupérer tous les instruments
@@ -33,6 +41,19 @@ public class InstrumentService {
         Instrument instrument = instrumentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Instrument introuvable avec l'id : " + id));
         return instrumentMapper.convertToDto(instrument);
+    }
+
+    // Récupérer la liste des instruments pour 1 média
+    public List<InstrumentDto> findAllByIdMedia(Integer id_media) {
+
+        if (!mediaRepository.existsById(id_media)) {
+            throw new EntityNotFoundException("Le média est introuvable.");
+        }
+
+        return mediaInstrumentRepository.findAllByMedia_Id(id_media)
+                .stream()
+                .map(mediaInstrument -> new InstrumentDto(mediaInstrument.getInstrument()))
+                .collect(Collectors.toList());
     }
 
     // Créer un nouvel instrument

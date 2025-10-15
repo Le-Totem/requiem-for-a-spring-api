@@ -1,13 +1,11 @@
 package fr.afpa.requiem_for_a_spring.services;
 
-import fr.afpa.requiem_for_a_spring.dtos.InstrumentDto;
 import fr.afpa.requiem_for_a_spring.dtos.MediaDto;
 import fr.afpa.requiem_for_a_spring.entities.*;
 import fr.afpa.requiem_for_a_spring.repositories.InstrumentRepository;
 import fr.afpa.requiem_for_a_spring.repositories.MediaRepository;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -50,19 +48,6 @@ public class MediaService {
     // Récupérer tous les médias d'une fiche morceau
     public List<MediaDto> getMediasByIdMusicPiece(Integer id) {
         return mediaRepository.findByIdTrack_Id(id).stream().map(MediaDto::new).collect(Collectors.toList());
-    }
-
-    // Récupérer la liste des instruments pour 1 média
-    public List<InstrumentDto> findAllByIdMedia(Integer id_media) {
-
-        if (!mediaRepository.existsById(id_media)) {
-            throw new EntityNotFoundException("Le média est introuvable.");
-        }
-
-        return instrumentRepository.findAllByMedia_Id(id_media)
-                .stream()
-                .map(InstrumentDto::new)
-                .collect(Collectors.toList());
     }
 
     // Créer un média et associer instruments, track et user

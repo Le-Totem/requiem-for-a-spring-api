@@ -37,6 +37,13 @@ public class InstrumentController {
         }
     }
 
+    // Récupérer un instrument par ID Media
+    @GetMapping("/{mediaId}/instruments")
+    public ResponseEntity<List<InstrumentDto>> getInstrumentByIdMedia(@PathVariable Integer mediaId) {
+        List<InstrumentDto> instrumentList = instrumentService.findAllByIdMedia(mediaId);
+        return ResponseEntity.ok(instrumentList);
+    }
+
     // Créer un nouvel instrument
     @PostMapping
     @RequireRole(role = Role.MODERATEUR)
