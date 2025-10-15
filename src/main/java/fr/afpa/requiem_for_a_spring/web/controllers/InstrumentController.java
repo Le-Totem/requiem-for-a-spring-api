@@ -37,6 +37,17 @@ public class InstrumentController {
         }
     }
 
+    // Récupérer un instrument par ID Media
+    @GetMapping("/media/{id}")
+    public ResponseEntity<InstrumentDto> getInstrumentByIdMedia(@PathVariable Integer id) {
+        try {
+            InstrumentDto dto = instrumentService.findById(id);
+            return ResponseEntity.ok(dto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Créer un nouvel instrument
     @PostMapping
     @RequireRole(role = Role.MODERATEUR)
@@ -53,7 +64,7 @@ public class InstrumentController {
     @PutMapping("/{id}")
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<InstrumentDto> updateInstrument(@PathVariable Integer id,
-                                                          @RequestBody InstrumentDto dto) {
+            @RequestBody InstrumentDto dto) {
         try {
             InstrumentDto updated = instrumentService.update(id, dto);
             return ResponseEntity.ok(updated);
