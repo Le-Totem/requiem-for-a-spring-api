@@ -46,12 +46,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Routes publiques
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/users/reset-password").permitAll()
 
                         // Admin global
                         .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
 
                         // Bloquer GET /api/users/** pour les utilisateurs sauf modo et admin
-                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("UTILISATEUR", "MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/me")
+                        .hasAnyRole("UTILISATEUR", "MODERATEUR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("MODERATEUR", "ADMIN")
 
                         // Modérateur / Admin global pour le reste des endpoints API

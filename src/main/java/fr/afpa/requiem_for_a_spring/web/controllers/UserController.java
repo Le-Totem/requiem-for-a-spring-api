@@ -1,6 +1,7 @@
 package fr.afpa.requiem_for_a_spring.web.controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -108,6 +109,31 @@ public class UserController {
         } catch (EntityNotFoundException e) {
             // La requête a échoué, l'utilisateur n'a pas été trouvé + erreur 404
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Endpoint pour réinitialiser le mot de passe d'un utilisateur.
+     * 
+     * 
+     * Cette méthode accepte une requête POST contenant l'email de l'utilisateur
+     * et le nouveau mot de passe. Elle permet de réinitialiser directement le mot
+     * de passe sans que l'utilisateur soit connecté.
+     *
+     * @param body Map contenant les champs "email" et "newPassword"
+     * @return ResponseEntity avec un message de succès ou d'erreur
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String newPassword = body.get("newPassword");
+
+        try {
+            userService.resetPasswordByEmail(email, newPassword);
+            return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès"));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Utilisateur non trouvé"));
         }
     }
 
