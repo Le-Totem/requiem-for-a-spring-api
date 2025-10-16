@@ -46,9 +46,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Routes publiques
                         .requestMatchers("/api/auth/**").permitAll()
-
+                        .requestMatchers("/api/**").authenticated()
                         // Admin global
-                        .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
 
                         // Bloquer GET /api/users/** pour les utilisateurs sauf modo et admin
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("UTILISATEUR",

@@ -39,6 +39,7 @@ public class GroupController {
      * @return
      */
     @GetMapping
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<List<GroupDto>> getAll() {
         List<GroupDto> groups = groupService.findAll();
         return ResponseEntity.ok(groups);
@@ -78,6 +79,10 @@ public class GroupController {
      */
     @GetMapping("/{groupId}/track")
     public ResponseEntity<List<MusicPieceDto>> getMusicByGroup(@PathVariable Integer groupId) {
+
+        // TODO ajouter un code permettant de vérifier les droits d'un utilisateur
+        // suivant le contexte
+
         List<MusicPiece> pieces = musicPieceRepository.findAllByGroup_Id(groupId);
         List<MusicPieceDto> dtos = pieces.stream().map(MusicPieceDto::new).toList();
 

@@ -4,8 +4,10 @@ import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +28,7 @@ public class RequireRoleAspect {
         this.userRepository = userRepository;
     }
 
-    @Before("@annotation(requireRole)")
+    @Before("@annotation(RequireRole)")
     public void checkRole(JoinPoint joinPoint, RequireRole requireRole) {
         System.out.println(">>> RequireRoleAspect déclenché sur " + joinPoint.getSignature());
 
