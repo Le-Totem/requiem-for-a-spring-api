@@ -6,10 +6,16 @@ import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.MediaInstrumentService;
 import fr.afpa.requiem_for_a_spring.services.MediaService;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -142,6 +148,27 @@ public class MediaController {
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    // ----------------- documents --------------------------------- //
+    @GetMapping("/{id}/file")
+    public @ResponseBody ResponseEntity<byte[]> print(@PathVariable Integer id) {
+
+        try {
+            FileInputStream fis = new FileInputStream(new File("uploads/bella_ciao.pdf"));
+            byte[] targetArray = new byte[fis.available()];
+            fis.read(targetArray);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(targetArray);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
