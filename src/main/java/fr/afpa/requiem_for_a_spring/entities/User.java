@@ -1,10 +1,12 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,11 +42,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "idUser", targetEntity = Media.class)
     private List<Media> medias;
 
-    //EAGER force Hibernate à charger les groupes immédiatement,
-    //donc le filtre JWT peut fonctionner normalement et récupérer les rôles.
+    // EAGER force Hibernate à charger les groupes immédiatement,
+    // donc le filtre JWT peut fonctionner normalement et récupérer les rôles.
     @OneToMany(mappedBy = "user", targetEntity = UserGroup.class, fetch = FetchType.EAGER)
     private List<UserGroup> userGroups;
-
 
     public User() {
 
@@ -66,10 +67,14 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userGroups.stream()
-                .map(role -> "ROLE_" + role.getRole().name())
-                .map(roleName -> (GrantedAuthority) () -> roleName)
-                .toList();
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_UTILISATEUR"));
+        return authorities;
+        // return userGroups.stream()
+        // .map(role -> "ROLE_" + role.getRole().name())
+        // .map(roleName -> (GrantedAuthority) () -> roleName)
+        // .toList();
     }
 
     @Override

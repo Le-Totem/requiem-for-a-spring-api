@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import fr.afpa.requiem_for_a_spring.enums.Status;
+
 
 @RestController
 @RequestMapping("/api/groups")
@@ -39,6 +40,7 @@ public class GroupController {
      * @return
      */
     @GetMapping
+    @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<List<GroupDto>> getAll() {
         List<GroupDto> groups = groupService.findAll();
         return ResponseEntity.ok(groups);
@@ -78,6 +80,10 @@ public class GroupController {
      */
     @GetMapping("/{groupId}/track")
     public ResponseEntity<List<MusicPieceDto>> getMusicByGroup(@PathVariable Integer groupId) {
+
+        // TODO ajouter un code permettant de vérifier les droits d'un utilisateur
+        // suivant le contexte
+
         List<MusicPiece> pieces = musicPieceRepository.findAllByGroup_Id(groupId);
         List<MusicPieceDto> dtos = pieces.stream().map(MusicPieceDto::new).toList();
 
@@ -98,6 +104,21 @@ public class GroupController {
     @RequireRole(role = Role.MODERATEUR)
     public ResponseEntity<List<InvitationDto>> getInvitations(@PathVariable Integer id) {
         return new ResponseEntity<>(invitationService.getAllInvitations(id), HttpStatus.OK);
+    }
+
+     /**
+     * Requête pour accepter/refuser invitations d'un ensemble ✅
+     * 
+     * @param invitationId
+     * @param status
+     * @return
+     */
+    @PutMapping("/invitations/{invitationId}/status")
+    public InvitationDto updateInvitationStatus(
+            @PathVariable Integer invitationId,
+            @RequestParam Status status
+    ) {
+        return invitationService.updateStatus(invitationId, status);
     }
 
     /**

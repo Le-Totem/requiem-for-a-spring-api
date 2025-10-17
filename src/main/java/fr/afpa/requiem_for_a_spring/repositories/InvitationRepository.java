@@ -13,4 +13,6 @@ public interface InvitationRepository extends JpaRepository<Invitation, Integer>
     // Récupérer toutes les invitations pour un groupe donné
     List<Invitation> findByGroup_Id(Integer groupId);
 
+    List<Invitation> findByEmail(String email);
+
 }

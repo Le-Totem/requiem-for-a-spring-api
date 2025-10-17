@@ -6,10 +6,18 @@ import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.services.MediaInstrumentService;
 import fr.afpa.requiem_for_a_spring.services.MediaService;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -142,6 +150,23 @@ public class MediaController {
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    // ----------------- documents --------------------------------- //
+
+    // récupère le fichier d'un média
+    @GetMapping("/{id}/file")
+    @RequireRole(role = Role.MODERATEUR)
+    public @ResponseBody ResponseEntity<byte[]> print(@PathVariable Integer id) {
+        return mediaService.printFile(id);
+    }
+
+    // enregistre le fichier dans "uploads/"
+    @PostMapping("/add-file")
+    @RequireRole(role = Role.MODERATEUR)
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        String filename = mediaService.saveFile(file);
+        return ResponseEntity.ok(filename);
     }
 
 }
