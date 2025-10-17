@@ -50,23 +50,23 @@ public class SecurityConfig {
                         // Admin global
                         // .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
 
-                        // // Bloquer GET /api/users/** pour les utilisateurs sauf modo et admin
-                        // .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("UTILISATEUR",
-                        // "MODERATEUR", "ADMIN")
-                        // .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("MODERATEUR",
-                        // "ADMIN")
+                        // Bloquer GET /api/users/** pour les utilisateurs sauf modo et admin
+                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("UTILISATEUR",
+                                "MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("MODERATEUR",
+                                "ADMIN")
 
-                        // // Modérateur / Admin global pour le reste des endpoints API
-                        // .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("UTILISATEUR",
-                        // "MODERATEUR", "ADMIN")
-                        // .requestMatchers(HttpMethod.POST, "/api/groups/create").authenticated()
-                        // .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("MODERATEUR",
-                        // "ADMIN")
-                        // .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
-                        // .requestMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("MODERATEUR",
-                        // "ADMIN")
-                        // .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("MODERATEUR",
-                        // "ADMIN")
+                        // Modérateur / Admin global pour le reste des endpoints API
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("UTILISATEUR",
+                                "MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/groups/create").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("MODERATEUR",
+                                "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("MODERATEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("MODERATEUR",
+                                "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("MODERATEUR",
+                                "ADMIN")
 
                         // Tout le reste → autorisé
                         .anyRequest().permitAll())
