@@ -113,6 +113,21 @@ public class UserService {
         return userMapper.convertToDto(userRepository.save(user));
     }
 
+    public UserDto inscriptionValid(UUID id, UserDto userDto){
+        Optional<User> originalUser = userRepository.findById(id);
+
+        if (originalUser.isEmpty()) {
+            throw new EntityNotFoundException("L'utilisateur' est introuvable.");
+        }
+
+         User user = originalUser.get();
+
+         user.setIs_validated(true);
+        
+        return userDto;
+        
+    }
+
     /**
      * Endpoint pour réinitialiser le mot de passe d'un utilisateur.
      * 

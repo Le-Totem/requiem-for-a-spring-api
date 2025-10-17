@@ -9,12 +9,15 @@ import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.mappers.GroupMapper;
 import fr.afpa.requiem_for_a_spring.repositories.GroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserGroupRepository;
+import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,12 +26,14 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final GroupMapper groupMapper;
     private final UserGroupRepository userGroupRepository;
+    private final UserRepository userRepository;
 
     public GroupService(GroupRepository groupRepository, GroupMapper groupMapper,
-            UserGroupRepository userGroupRepository) {
+            UserGroupRepository userGroupRepository, UserRepository userRepository) {
         this.groupRepository = groupRepository;
         this.groupMapper = groupMapper;
         this.userGroupRepository = userGroupRepository;
+        this.userRepository = userRepository;
     }
 
     public List<GroupDto> findAll() {
@@ -89,6 +94,27 @@ public class GroupService {
         Group updatedGroup = groupRepository.save(group);
 
         return groupMapper.convertToDto(updatedGroup);
+    }
+
+    /**
+     * Ajoute un utilisateur à un groupe avec un rôle donné (par défaut MEMBER)
+     */
+    public void addUserToGroup(UUID userId, Integer groupId, Role role) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Groupe introuvable avec l'id : " + groupId));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable avec l'id : " + userId));
+
+        // Vérifie que la relation n'existe pas déjà
+        boolean alreadyMember = userGroupRepository.findByUser_IdAndGroup_Id(userId, groupId).isPresent();
+        if (alreadyMember) {
+            throw new IllegalStateException("L'utilisateur est déjà membre de ce groupe.");
+        }
+
+        // Crée la relation
+        UserGroup userGroup = new UserGroup(user, group, role != null ? role : Role.UTILISATEUR);
+        userGroupRepository.save(userGroup);
     }
 
 

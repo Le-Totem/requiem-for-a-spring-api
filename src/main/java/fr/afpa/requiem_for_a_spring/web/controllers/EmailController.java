@@ -4,6 +4,7 @@ import fr.afpa.requiem_for_a_spring.config.jwt.RequireRole;
 import fr.afpa.requiem_for_a_spring.dtos.InvitationDto;
 import fr.afpa.requiem_for_a_spring.enums.Role;
 import fr.afpa.requiem_for_a_spring.mailer.EmailServiceImpl;
+import fr.afpa.requiem_for_a_spring.services.InvitationService;
 
 import java.util.List;
 
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
 
     private final EmailServiceImpl emailService;
+    private final InvitationService invitationService;
 
-    public EmailController(EmailServiceImpl emailService) {
+    public EmailController(EmailServiceImpl emailService, InvitationService invitationService) {
         this.emailService = emailService;
+        this.invitationService = invitationService;
     }
 
     @GetMapping("/send-email")
@@ -27,8 +30,8 @@ public class EmailController {
         return "Mail envoyé";
     }
 
-    //  @GetMapping("/email/{email}")
-    // public List<InvitationDto> getInvitationsByEmail(@PathVariable String email) {
-    //     return invitationService.amIInvited(email);
-    // }
+    @GetMapping("/email/{email}")
+    public List<InvitationDto> getInvitationsByEmail(@PathVariable String email) {
+        return invitationService.amIInvited(email);
+    }
 }

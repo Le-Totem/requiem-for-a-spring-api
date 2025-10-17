@@ -174,7 +174,35 @@ public class UserController {
         return invitationService.amIInvited(email);
     }
 
+
     /**
+     * Endpoint pour envoyer un code à un utilisateur
+     * 
+     * @param body Contient "email" et "code"
+     * @return Message de succès ou d'erreur
+     */
+    @PostMapping("/send-code")
+    public ResponseEntity<String> sendCode(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String codeStr = body.get("code");
+
+        if (email == null || codeStr == null) {
+            return ResponseEntity.badRequest().body("Email et code requis");
+        }
+
+        try {
+            Integer code = Integer.parseInt(codeStr);
+            invitationService.sendCode(code, email);
+            return ResponseEntity.ok("Code envoyé avec succès");
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("Code invalide");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erreur lors de l'envoi du code : " + e.getMessage());
+        }
+    }
+
+
+        /**
      * Requête pour supprimer un utilisateur ✅
      * 
      * @param id       L'id de l'utilisateur à supprimer
