@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -151,24 +153,20 @@ public class MediaController {
     }
 
     // ----------------- documents --------------------------------- //
-    @GetMapping("/{id}/file")
-    public @ResponseBody ResponseEntity<byte[]> print(@PathVariable Integer id) {
 
-        try {
-            FileInputStream fis = new FileInputStream(new File("uploads/bella_ciao.pdf"));
-            byte[] targetArray = new byte[fis.available()];
-            fis.read(targetArray);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(targetArray);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
+    // récupère le fichier d'un média
+    @GetMapping("/{id}/file")
+    @RequireRole(role = Role.MODERATEUR)
+    public @ResponseBody ResponseEntity<byte[]> print(@PathVariable Integer id) {
+        return mediaService.printFile(id);
+    }
+
+    // enregistre le fichier dans "uploads/"
+    @PostMapping("/add-file")
+    @RequireRole(role = Role.MODERATEUR)
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        String filename = mediaService.saveFile(file);
+        return ResponseEntity.ok(filename);
     }
 
 }

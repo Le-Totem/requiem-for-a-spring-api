@@ -27,8 +27,8 @@ public class EmailController {
         return "Mail envoyé";
     }
 
-     @GetMapping("/email/{email}")
-    public List<InvitationDto> getInvitationsByEmail(@PathVariable String email) {
-        return invitationService.amIInvited(email);
-    }
+    //  @GetMapping("/email/{email}")
+    // public List<InvitationDto> getInvitationsByEmail(@PathVariable String email) {
+    //     return invitationService.amIInvited(email);
+    // }
 }

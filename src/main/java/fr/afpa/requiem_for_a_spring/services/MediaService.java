@@ -7,8 +7,17 @@ import fr.afpa.requiem_for_a_spring.repositories.MediaRepository;
 import fr.afpa.requiem_for_a_spring.repositories.MusicPieceRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +39,9 @@ public class MediaService {
         this.musicPieceRepository = musicPieceRepository;
         this.userRepository = userRepository;
     }
+
+    // dossier où sont stockés les fichiers
+    private static final String UPLOAD_DIR = "uploads/";
 
     // Récupérer tous les médias
     public List<MediaDto> getAll() {
@@ -136,5 +148,70 @@ public class MediaService {
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Media non trouvé : id=" + id));
         mediaRepository.delete(media);
+    }
+
+    // ----------------- documents --------------------------------- //
+
+    // récupérer le fichier d'un média
+    public ResponseEntity<byte[]> printFile(Integer idMedia) {
+        Media media = mediaRepository.findById(idMedia)
+                .orElseThrow(() -> new RuntimeException("Média non trouvé : " + idMedia));
+
+        try {
+            if (media.getUrl() == null || media.getUrl().isEmpty()) {
+                throw new RuntimeException("Ce média n'a pas d'url.");
+            }
+            Path filePath = Paths.get(UPLOAD_DIR + media.getUrl());
+            MediaType mediaTypeSelected = getMediaType(media.getType(), filePath);
+            byte[] files = Files.readAllBytes(filePath);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline; filename=\"" + filePath.getFileName().toString() + "\"")
+                    .contentType(mediaTypeSelected)
+                    .body(files);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la lecture du fichier.");
+        }
+    }
+
+    // récupère le bon content-type
+    private MediaType getMediaType(fr.afpa.requiem_for_a_spring.enums.MediaType type, Path pathFile)
+            throws IOException {
+        switch (type) {
+            case PDF:
+                return MediaType.APPLICATION_PDF;
+            case IMAGE:
+                String detectedType = Files.probeContentType(pathFile);
+                return detectedType != null ? MediaType.parseMediaType(detectedType) : MediaType.IMAGE_PNG;
+            case VIDEO:
+                return MediaType.valueOf("video/mp4");
+            case MUSESCORE:
+                return MediaType.valueOf("application/vnd.musescore");
+            case TUXGUITAR:
+                return MediaType.valueOf("application/x-tuxguitar");
+            default:
+                return MediaType.APPLICATION_OCTET_STREAM;
+        }
+    }
+
+    // enregistre le fichier dans /uploads
+    public String saveFile(MultipartFile file) {
+        try {
+            if (file.isEmpty()) {
+                throw new RuntimeException("Pas de fichier.");
+            }
+
+            Path uploadsDir = Paths.get("uploads");
+            if (!Files.exists(uploadsDir)) {
+                Files.createDirectories(uploadsDir);
+            }
+
+            String filename = file.getOriginalFilename(); //
+            Path path = uploadsDir.resolve(filename);
+            Files.copy(file.getInputStream(), path);
+            return filename;
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la sauvegarde du fichier.", e);
+        }
     }
 }
