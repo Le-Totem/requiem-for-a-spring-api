@@ -33,6 +33,7 @@ public class UserService {
         this.userGroupRepository = userGroupRepository;
     }
 
+    
     /**
      * Récupère tous les utilisateurs
      * 
@@ -67,12 +68,11 @@ public class UserService {
         return userGroups.stream()
                 .map(ug -> {
                     UserDto dto = new UserDto(ug.getUser()); // récupère les infos de l'utilisateur
-                    dto.setRole(ug.getRole());              // ajoute le rôle dans cet ensemble
+                    dto.setRole(ug.getRole()); // ajoute le rôle dans cet ensemble
                     return dto;
                 })
                 .collect(Collectors.toList());
     }
-
 
     /**
      * Modifie un utilisateur
