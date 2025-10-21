@@ -10,6 +10,8 @@ CREATE TABLE "user"(
    lastname VARCHAR(50)  NOT NULL,
    email VARCHAR(50) UNIQUE NOT NULL,
    "password" VARCHAR(255)  NOT NULL,
+   reset_token VARCHAR(250) NOT NULL,
+   reset_token_expiry timestamp,
    is_validated BOOLEAN NOT NULL,
    picture VARCHAR(150) ,
    PRIMARY KEY(id)
