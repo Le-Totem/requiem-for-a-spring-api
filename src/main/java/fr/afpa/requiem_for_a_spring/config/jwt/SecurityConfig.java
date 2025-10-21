@@ -47,6 +47,7 @@ public class SecurityConfig {
                                                 // Routes publiques
                                                 .requestMatchers("/api/auth/**").permitAll()
                                                 .requestMatchers("/api/**").authenticated()
+                                                .requestMatchers("/api/users/reset-password").permitAll()
 
                                                 // Admin global
                                                 .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")

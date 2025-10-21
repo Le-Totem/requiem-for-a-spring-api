@@ -1,5 +1,6 @@
 package fr.afpa.requiem_for_a_spring.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import fr.afpa.requiem_for_a_spring.dtos.UserRoleDto;
 import fr.afpa.requiem_for_a_spring.entities.User;
 import fr.afpa.requiem_for_a_spring.entities.UserGroup;
 import fr.afpa.requiem_for_a_spring.entities.UserGroupId;
+import fr.afpa.requiem_for_a_spring.mailer.EmailService;
 import fr.afpa.requiem_for_a_spring.mappers.UserMapper;
 import fr.afpa.requiem_for_a_spring.repositories.UserGroupRepository;
 import fr.afpa.requiem_for_a_spring.repositories.UserRepository;
@@ -25,15 +27,16 @@ public class UserService {
     private UserMapper userMapper;
     private UserGroupRepository userGroupRepository;
     private PasswordEncoder passwordEncoder;
+    private EmailService emailService;
 
     public UserService(UserRepository userRepository, UserMapper userMapper,
-            UserGroupRepository userGroupRepository) {
+            UserGroupRepository userGroupRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.userGroupRepository = userGroupRepository;
+        this.emailService = emailService;
     }
 
-    
     /**
      * Récupère tous les utilisateurs
      * 
@@ -113,35 +116,93 @@ public class UserService {
         return userMapper.convertToDto(userRepository.save(user));
     }
 
-    public UserDto inscriptionValid(UUID id, UserDto userDto){
+    public UserDto inscriptionValid(UUID id, UserDto userDto) {
         Optional<User> originalUser = userRepository.findById(id);
 
         if (originalUser.isEmpty()) {
             throw new EntityNotFoundException("L'utilisateur' est introuvable.");
         }
 
-         User user = originalUser.get();
+        User user = originalUser.get();
 
-         user.setIs_validated(true);
-        
+        user.setIs_validated(true);
+
         return userDto;
-        
+
     }
 
     /**
-     * Endpoint pour réinitialiser le mot de passe d'un utilisateur.
-     * 
-     * ette méthode accepte une requête POST contenant l'email de l'utilisateur
-     * et le nouveau mot de passe. Elle permet de réinitialiser directement le mot
-     * de passe sans que l'utilisateur soit connecté.
+     * 🔐 Envoie un e-mail de réinitialisation de mot de passe à un utilisateur.
      *
-     * @param body Map contenant les champs "email" et "newPassword"
-     * @return ResponseEntity avec un message de succès ou d'erreur
+     * <p>
+     * Cette méthode est appelée lorsqu'un utilisateur indique avoir oublié son mot
+     * de passe. Elle génère un jeton unique (UUID) associé à l'utilisateur et une
+     * date d'expiration (par défaut 30 minutes). Un lien contenant ce jeton est
+     * ensuite envoyé à l'adresse e-mail de l'utilisateur, lui permettant de
+     * réinitialiser son mot de passe via le front-end.
+     * </p>
+     *
+     * @param email L’adresse e-mail de l’utilisateur qui a demandé la
+     *              réinitialisation.
+     * @throws EntityNotFoundException si aucun utilisateur n’existe avec cette
+     *                                 adresse e-mail.
      */
-    public void resetPasswordByEmail(String email, String newPassword) {
+    public void sendPasswordResetEmail(String email) {
+        // Recherche de l'utilisateur correspondant à l'email fourni
         User user = userRepository.findByEmail(email)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé"));
+
+        // Génération d’un token unique et définition de la date d’expiration (30
+        // minutes)
+        String resetToken = UUID.randomUUID().toString();
+        user.setResetToken(resetToken);
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
+        userRepository.save(user);
+
+        // Construction du lien de réinitialisation à envoyer par e-mail
+        String resetLink = "http://localhost:5173/reset-password?token=" + resetToken;
+
+        // Envoi du mail via le service d’e-mail existant
+        emailService.sendSimpleMessage(
+                user.getEmail(),
+                "Réinitialisation de votre mot de passe",
+                "Bonjour " + user.getFirstname() + ",\n\n" +
+                        "Cliquez sur ce lien pour réinitialiser votre mot de passe :\n" +
+                        resetLink + "\n\n" +
+                        "Ce lien expirera dans 30 minutes.\n\n" +
+                        "L'équipe Requiem for a Spring.");
+    }
+
+    /**
+     * Réinitialise le mot de passe d’un utilisateur à partir d’un jeton valide.
+     *
+     * Cette méthode est appelée lorsque l’utilisateur clique sur le lien reçu par
+     * e-mail et soumet un nouveau mot de passe. Elle vérifie que le jeton existe,
+     * qu’il n’a pas expiré, puis encode et sauvegarde le nouveau mot de passe avant
+     * d’invalider le jeton.
+     *
+     * @param token       Le jeton unique envoyé par e-mail (paramètre dans l’URL).
+     * @param newPassword Le nouveau mot de passe choisi par l’utilisateur.
+     * @throws EntityNotFoundException  si le jeton est invalide ou n’existe pas.
+     * @throws IllegalArgumentException si le jeton a expiré.
+     */
+    public void resetPasswordWithToken(String token, String newPassword) {
+        // Recherche de l'utilisateur à partir du token
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Lien de réinitialisation invalide"));
+
+        // Vérification de la validité temporelle du lien
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Le lien de réinitialisation a expiré");
+        }
+
+        // Mise à jour du mot de passe (après encodage)
         user.setPassword(passwordEncoder.encode(newPassword));
+
+        // Suppression du token et de sa date d’expiration pour empêcher une
+        // réutilisation
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
         userRepository.save(user);
     }
 

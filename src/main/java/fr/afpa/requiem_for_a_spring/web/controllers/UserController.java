@@ -117,27 +117,76 @@ public class UserController {
     }
 
     /**
-     * Endpoint pour réinitialiser le mot de passe d'un utilisateur.
-     * 
-     * 
-     * Cette méthode accepte une requête POST contenant l'email de l'utilisateur
-     * et le nouveau mot de passe. Elle permet de réinitialiser directement le mot
-     * de passe sans que l'utilisateur soit connecté.
+     * 🔐 Endpoint pour la gestion complète du processus de réinitialisation du mot
+     * de passe utilisateur.
      *
-     * @param body Map contenant les champs "email" et "newPassword"
-     * @return ResponseEntity avec un message de succès ou d'erreur
+     * 
+     * Cet endpoint gère deux cas distincts selon le contenu du corps de la requête
+     * :
+     * 
+     * Demande de lien de réinitialisation :
+     * Si seule l’adresse e-mail est fournie, un e-mail est envoyé à l’utilisateur
+     * avec un lien sécurisé permettant de choisir un nouveau mot de passe.
+     *
+     * Soumission du nouveau mot de passe :
+     * Si un jeton valide (fourni dans le lien) et un nouveau mot de passe sont
+     * envoyés, le mot de passe de l’utilisateur est mis à jour, et le jeton devient
+     * invalide.
+     *
+     * @param body Map contenant selon le cas :
+     *             email : pour demander un lien de
+     *             réinitialisation,
+     *             token et newPassword : pour réinitialiser le
+     *             mot de passe via le lien reçu.
+     * 
+     * @return {@link ResponseEntity} contenant un message de succès ou d’erreur
+     *         selon le cas traité.
+     *
+     * @throws EntityNotFoundException  si l’adresse e-mail ou le jeton est
+     *                                  invalide.
+     * @throws IllegalArgumentException si le lien de réinitialisation a expiré.
+     * @throws Exception                en cas d’erreur interne (ex. envoi
+     *                                  d’e-mail).
      */
     @PostMapping("/reset-password")
     public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> body) {
         String email = body.get("email");
+        String token = body.get("token");
         String newPassword = body.get("newPassword");
 
         try {
-            userService.resetPasswordByEmail(email, newPassword);
-            return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès"));
+            // Étape 1 : L’utilisateur demande un lien de réinitialisation (envoi
+            // d’email)
+            if (email != null && token == null && newPassword == null) {
+                userService.sendPasswordResetEmail(email);
+                return ResponseEntity.ok(Map.of("message", "Email de réinitialisation envoyé"));
+            }
+
+            // Étape 2 : L’utilisateur clique sur le lien et choisit un nouveau mot de
+            // passe
+            if (token != null && newPassword != null) {
+                userService.resetPasswordWithToken(token, newPassword);
+                return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès"));
+            }
+
+            // Cas invalide : la requête ne contient pas les bons paramètres
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Requête invalide : vérifiez les paramètres envoyés"));
+
         } catch (EntityNotFoundException e) {
+            // L’utilisateur ou le token n’existe pas
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Utilisateur non trouvé"));
+                    .body(Map.of("message", e.getMessage()));
+
+        } catch (IllegalArgumentException e) {
+            // Le lien a expiré ou les données sont invalides
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", e.getMessage()));
+
+        } catch (Exception e) {
+            // Erreur imprévue (ex: serveur mail indisponible)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Erreur interne : " + e.getMessage()));
         }
     }
 
@@ -174,7 +223,6 @@ public class UserController {
         return invitationService.amIInvited(email);
     }
 
-
     /**
      * Endpoint pour envoyer un code à un utilisateur
      * 
@@ -201,8 +249,7 @@ public class UserController {
         }
     }
 
-
-        /**
+    /**
      * Requête pour supprimer un utilisateur ✅
      * 
      * @param id       L'id de l'utilisateur à supprimer

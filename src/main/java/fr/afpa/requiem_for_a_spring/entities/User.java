@@ -1,5 +1,6 @@
 package fr.afpa.requiem_for_a_spring.entities;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +42,12 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "idUser", targetEntity = Media.class)
     private List<Media> medias;
+
+    @Column(name = "reset_token", length = 100, nullable = true)
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry", nullable = true)
+    private LocalDateTime resetTokenExpiry;
 
     // EAGER force Hibernate à charger les groupes immédiatement,
     // donc le filtre JWT peut fonctionner normalement et récupérer les rôles.
@@ -171,4 +178,33 @@ public class User implements UserDetails {
     public void setUserGroups(List<UserGroup> userGroups) {
         this.userGroups = userGroups;
     }
+
+    /**
+     * Retourne la date et l'heure d'expiration du jeton de réinitialisation.
+     *
+     * @return La date d'expiration du token, ou {@code null} si aucun token n'est
+     *         défini.
+     */
+    public LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    /**
+     * Définit le jeton de réinitialisation du mot de passe.
+     *
+     * @param resetToken Le jeton unique généré pour la réinitialisation.
+     */
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    /**
+     * Définit la date et l'heure d'expiration du jeton de réinitialisation.
+     *
+     * @param resetTokenExpiry La date d'expiration du token.
+     */
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
+
 }
