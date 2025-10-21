@@ -30,10 +30,11 @@ public class UserService {
     private EmailService emailService;
 
     public UserService(UserRepository userRepository, UserMapper userMapper,
-            UserGroupRepository userGroupRepository, EmailService emailService) {
+            UserGroupRepository userGroupRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.userGroupRepository = userGroupRepository;
+        this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
     }
 
