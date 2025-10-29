@@ -48,7 +48,7 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/auth/**").permitAll()
                                                 .requestMatchers("/api/users/reset-password").permitAll()
                                                 .requestMatchers("/api/**").authenticated()
-                                                
+
                                                 // Admin global
                                                 .requestMatchers(HttpMethod.DELETE, "/api/groups/**").hasRole("ADMIN")
 
@@ -96,7 +96,7 @@ public class SecurityConfig {
         @Bean
         CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+                configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://51.210.4.227"));
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 configuration.setAllowedHeaders(List.of("*"));
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
